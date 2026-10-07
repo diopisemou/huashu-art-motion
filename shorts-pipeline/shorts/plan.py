@@ -12,7 +12,7 @@ from .config import Config
 log = logging.getLogger("shorts.plan")
 
 Grammar = Literal["y5_kinetic_type", "y3_whiteboard", "t1_3b1b", "y1_kurzgesagt", "t2_keynote_ui", "t3_finance_chart"]
-Kind = Literal["title", "point", "number", "highlight", "draw", "equation", "line", "enter", "card", "bar"]
+Kind = Literal["title", "point", "number", "highlight", "draw", "equation", "line", "enter", "card", "bar", "broll"]
 
 # Which cue kinds each grammar understands (anything else is dropped at spec time).
 ALLOWED_KINDS: dict[str, set[str]] = {
@@ -67,11 +67,13 @@ class Cue(BaseModel):
     index: Optional[int] = Field(None, description="highlight/enter: which earlier point (0-based)")
     values: Optional[list[float]] = Field(None, description="t1 line: y values")
     color: Optional[str] = None
+    style: Optional[str] = Field(None, description="broll cue: art style id from the b-roll style list")
 
 
 class ShortPlan(BaseModel):
     topic: str
     language: str
+    format: str = Field("list", description="one of the channel's formats: list, hook_broll, explainer, keynote, data")
     grammar: Grammar
     title: str = Field(..., description="YouTube title, <= 70 characters, no hashtags, no clickbait caps")
     description: str = Field(..., description="2-4 sentences. If any number is quoted, name its source here.")
@@ -135,8 +137,24 @@ Format rules
 - Choose the grammar that fits the idea; default to y5_kinetic_type when unsure. Only use t3_finance_chart with real, sourced numbers.
 - Avoid these recent titles/topics: {recent}
 
+Today's format: {format_id}. {format_brief}
+{format_rules}
+
 {grammar_guide}
 """
+
+FORMAT_RULES = {
+    "list": "Set format='list', grammar='y5_kinetic_type'. Cues: title (hook), 3-4 point cues (label '01'..), optionally one number cue, one final highlight.",
+    "hook_broll": (
+        "Set format='hook_broll', grammar='y5_kinetic_type'. Cues: cue 1 is `title` (hook; text <= 6 words, sub optional) spoken in ONE sentence; "
+        "then 3-4 `broll` cues, each with `style` (an id from the list below), `text` = a <= 6-word caption burned over the scene, and 1-2 sentences of narration "
+        "that tell this beat of the story or argument; pick styles whose mood matches the beat and never reuse a style; no other cue kinds. "
+        "The outro is spoken over a closing card.\nB-roll styles: {styles}"
+    ),
+    "explainer": "Set format='explainer' and pick y3_whiteboard, t1_3b1b or y1_kurzgesagt. 4-6 cues following that grammar's menu.",
+    "keynote": "Set format='keynote', grammar='t2_keynote_ui'. Cues: title, three card cues with icons, one number cue.",
+    "data": "Set format='data', grammar='t3_finance_chart' ONLY with a real dataset you can source in the description (data.series, data.source). If you cannot, set format='list' and write a list instead.",
+}
 
 
 def _client():
@@ -145,9 +163,58 @@ def _client():
     return anthropic.Anthropic()
 
 
-def generate_plan(cfg: Config, topic: str, recent_titles: list[str] | None = None) -> ShortPlan:
+def _text(response) -> str:
+    return "".join(b.text for b in response.content if b.type == "text")
+
+
+def _extract_json(text: str) -> str:
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+        text = text.rsplit("```", 1)[0]
+    i, j = text.find("{"), text.rfind("}")
+    return text[i:j + 1] if i >= 0 and j > i else text
+
+
+def _ask_json(client, model: str, system: str, user: str, schema, *, effort: str = "high", max_tokens: int = 16000):
+    """Plain JSON in text, validated with pydantic, one repair round. (The strict structured-output grammar for this
+    schema is larger than the API accepts, so the schema is given in the prompt instead.)"""
+    import json as _json
+    from pydantic import ValidationError
+
+    schema_json = _json.dumps(schema.model_json_schema(), ensure_ascii=False)
+    sys_full = system + "\n\nReturn ONLY a JSON object (no prose, no code fence) that validates against this JSON Schema:\n" + schema_json
+    messages = [{"role": "user", "content": user}]
+    last_err = None
+    for attempt in range(2):
+        response = client.messages.create(model=model, max_tokens=max_tokens, system=sys_full, messages=messages,
+                                          output_config={"effort": effort})
+        if response.stop_reason == "refusal":
+            raise RuntimeError(f"Claude declined ({getattr(response, 'stop_details', None)}). Pick another topic.")
+        raw = _extract_json(_text(response))
+        try:
+            return schema.model_validate_json(raw)
+        except (ValidationError, ValueError) as e:
+            last_err = e
+            log.warning("plan JSON invalid (attempt %d): %s", attempt + 1, str(e)[:400])
+            messages += [{"role": "assistant", "content": _text(response)},
+                         {"role": "user", "content": f"That JSON did not validate:\n{str(e)[:1500]}\nReturn the corrected JSON object only."}]
+    raise RuntimeError(f"could not get a valid plan: {last_err}")
+
+
+def generate_plan(cfg: Config, topic: str, recent_titles: list[str] | None = None, fmt: str = "list") -> ShortPlan:
+    from .formats import BROLL_STYLES, FORMATS
+
     client = _client()
+    f = FORMATS.get(fmt) or FORMATS["list"]
+    rules = FORMAT_RULES.get(fmt, "")
+    if fmt == "hook_broll":
+        styles = (cfg.get("formats.broll.styles") or list(BROLL_STYLES))
+        rules = rules.format(styles="; ".join(f"{k} = {BROLL_STYLES.get(k, k)}" for k in styles))
     system = SYSTEM_PROMPT.format(
+        format_id=fmt,
+        format_brief=f["brief"],
+        format_rules=rules,
         name=cfg.get("channel.name", "the channel"),
         brief=" ".join(str(cfg.get("channel.brief", "")).split()),
         audience=cfg.get("channel.audience", ""),
@@ -157,26 +224,27 @@ def generate_plan(cfg: Config, topic: str, recent_titles: list[str] | None = Non
         recent="; ".join(recent_titles or [])[:1500] or "(none yet)",
         grammar_guide=GRAMMAR_GUIDE,
     )
-    allowed = cfg.grammars
+    allowed = [g for g in f["grammars"] if g in cfg.grammars] or cfg.grammars
     user = (
         f"Topic for today's short: {topic}\n\n"
-        f"Allowed grammars for this channel: {', '.join(allowed)}.\n"
+        f"Format: {fmt}. Allowed grammars for this format: {', '.join(allowed)}.\n"
         "Return the plan."
     )
     model = str(cfg.get("llm.model", "claude-opus-5-5"))
     log.info("asking %s for a plan: %s", model, topic)
-    response = client.messages.parse(
-        model=model,
-        max_tokens=16000,
-        system=system,
-        messages=[{"role": "user", "content": user}],
-        output_format=ShortPlan,
-        output_config={"effort": str(cfg.get("llm.effort", "high"))},
-    )
-    if response.stop_reason == "refusal":
-        raise RuntimeError(f"Claude declined to write this script ({getattr(response, 'stop_details', None)}). Pick another topic.")
-    plan: ShortPlan = response.parsed_output
-    if plan.grammar not in allowed:
+    plan = _ask_json(client, model, system, user, ShortPlan, effort=str(cfg.get("llm.effort", "high")))
+    if plan.format not in FORMATS:
+        plan.format = fmt
+    if plan.format == "hook_broll":
+        plan.grammar = "y5_kinetic_type"
+        bad = [c for c in plan.cues[1:] if c.kind != "broll" or c.style not in BROLL_STYLES]
+        if bad:
+            log.warning("hook_broll plan has %d non-broll or unknown-style cues; they are dropped", len(bad))
+            plan.cues = [plan.cues[0]] + [c for c in plan.cues[1:] if c.kind == "broll" and c.style in BROLL_STYLES]
+    elif plan.format == "data" and not (plan.data.series and plan.data.source):
+        log.warning("data format without a sourced series -> list")
+        plan.format, plan.grammar = "list", "y5_kinetic_type"
+    if plan.grammar not in allowed and plan.format != "list":
         log.warning("plan chose %s which is not allowed; falling back to %s", plan.grammar, cfg.get("video.default_grammar"))
         plan.grammar = cfg.get("video.default_grammar", "y5_kinetic_type")
     plan.topic = plan.topic or topic
@@ -211,11 +279,5 @@ def generate_topics(cfg: Config, history_titles: list[str], existing: list[str],
         f"Already queued: {'; '.join(existing) or '(nothing)'}\n\n"
         f"Propose {n} new topics."
     )
-    response = client.messages.parse(
-        model=model, max_tokens=4000, system=system,
-        messages=[{"role": "user", "content": user}], output_format=TopicBatch,
-        output_config={"effort": "medium"},
-    )
-    if response.stop_reason == "refusal":
-        raise RuntimeError("Claude declined to propose topics")
-    return [t.strip() for t in response.parsed_output.topics if t.strip()][:n]
+    batch = _ask_json(client, model, system, user, TopicBatch, effort="medium", max_tokens=4000)
+    return [t.strip() for t in batch.topics if t.strip()][:n]

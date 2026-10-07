@@ -11,9 +11,13 @@ on:
         required: false
         default: ""
       publish:
-        description: "Upload to YouTube"
+        description: "Upload to YouTube (default: build only; you publish by hand from the artifact)"
         type: boolean
-        default: true
+        default: false
+      format:
+        description: "Force a format (list, hook_broll, explainer, keynote, data); blank = weighted rotation"
+        required: false
+        default: ""
 
 concurrency:
   group: daily-short
@@ -64,7 +68,8 @@ jobs:
           YT_TOKEN_JSON: ${{ secrets.YT_TOKEN_JSON }}
         run: |
           ARGS=""
-          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.publish }}" = "true" ]; then ARGS="--publish"; fi
+          if [ "${{ inputs.publish }}" = "true" ]; then ARGS="--publish"; fi
+          if [ -n "${{ inputs.format }}" ]; then ARGS="$ARGS --format ${{ inputs.format }}"; fi
           if [ -n "${{ inputs.topic }}" ]; then ARGS="$ARGS --topic \"${{ inputs.topic }}\""; fi
           eval uv run shorts run $ARGS
 
@@ -76,6 +81,7 @@ jobs:
           path: |
             out/**/final.mp4
             out/**/sheet.jpg
+            out/**/publish.txt
             out/**/plan.json
             out/**/qa_report.md
             out/**/manifest.json

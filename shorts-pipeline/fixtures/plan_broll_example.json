@@ -1,0 +1,23 @@
+{
+  "topic": "Why your AI coding agent keeps rewriting files it should not touch",
+  "language": "en",
+  "format": "hook_broll",
+  "grammar": "y5_kinetic_type",
+  "title": "Why your coding agent rewrites files it should not touch",
+  "description": "Agents rewrite whole files because the instruction never said where the edit ends. One rule fixes most of it: name the file and the function before you ask for the change.",
+  "tags": ["ai coding", "claude code", "agents", "developer tips"],
+  "data": {},
+  "cues": [
+    {"kind": "title", "text": "Your agent rewrote the whole file", "sub": "here is why",
+     "narration": "Your AI agent just rewrote a whole file you never asked it to touch. Here is why."},
+    {"kind": "broll", "style": "24_hopper", "text": "It cannot see the edges",
+     "narration": "An agent reads your request like a stranger in a quiet diner. It knows what you want, not where the change is supposed to stop."},
+    {"kind": "broll", "style": "11_cubism", "text": "Vague scope, broken shapes",
+     "narration": "So a vague instruction turns into a vague edit. The scope fractures, and it fixes things you never mentioned."},
+    {"kind": "broll", "style": "12_bauhaus", "text": "Name the file. Name the function.",
+     "narration": "The fix is a boundary. Name the file, name the function, and say what must not change."},
+    {"kind": "broll", "style": "14_8bit", "text": "Small edits, every time",
+     "narration": "Do that and the agent plays inside the level you drew. Small edits, every time."}
+  ],
+  "outro": "Follow for one build lesson a day."
+}

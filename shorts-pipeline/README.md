@@ -13,8 +13,11 @@ No stock footage, no avatars, no per-video design work. The visuals are the expl
 Kurzgesagt-style, keynote cards, finance charts), rendered frame-accurately from a JSON spec, in portrait, with the
 caption band kept clear.
 
-> This folder was pushed as `shorts-pipeline/` on a branch of the huashu-art-motion fork because the session could not
-> create a repository. Move it to its own repo: `git clone -b shorts-pipeline <fork> tmp && cp -r tmp/shorts-pipeline my-shorts && cd my-shorts && git init`.
+## Formats
+
+Five formats rotate so the channel does not look the same every day: `list`, `hook_broll` (hook card + painted
+moving b-roll + CTA card), `explainer`, `keynote`, `data`. The chooser never repeats yesterday's format and, once
+`shorts stats` has linked your published videos, weights formats by how they perform. See [FORMATS.md](FORMATS.md).
 
 ## What a run produces
 
@@ -28,6 +31,7 @@ caption band kept clear.
 | `silent.mp4` → `final.mp4` | the animation, then the delivered 1080×1920 H.264 with captions and audio at −14 LUFS |
 | `sheet.jpg` | 12-frame contact sheet. **Look at it before publishing.** |
 | `qa_report.md` / `qa_report.json` | checks; publishing refuses when it fails (override with `--force`) |
+| `publish.txt` | title, description and tags ready to paste into YouTube Studio when you publish by hand |
 | `manifest.json` | everything above plus the YouTube id/url once uploaded |
 
 ## Setup (once)
@@ -75,8 +79,12 @@ configurable ceiling (`video.max_seconds`, default 58) and appends ` #Shorts` to
 ## Daily use
 
 ```sh
-uv run shorts run                       # next topic from topics.yaml → video in out/, not uploaded
-uv run shorts run --publish             # … and upload when QA passes
+uv run shorts run                       # next topic from topics.yaml → video + publish.txt in out/, not uploaded
+uv run shorts run --format hook_broll   # force a format (list, hook_broll, explainer, keynote, data)
+uv run shorts stats                     # pull view counts, link them to built shorts by title, score the formats
+uv run shorts next                      # no API key: prints format, topic, rules and schema; write plan.json, then
+uv run shorts build --plan plan.json --record   # voice + render + QA + publish.txt, records history, consumes the topic
+uv run shorts run --publish             # upload too, when QA passes (optional; the default flow is manual publishing)
 uv run shorts run --topic "Why your agent rewrites files it should not touch" --publish
 uv run shorts run --plan fixtures/plan_example.json      # no Claude call; good for testing the renderer
 uv run shorts publish out/2026-10-08-some-slug --privacy unlisted
@@ -88,10 +96,16 @@ Exit code 0 = built and QA passed, 2 = built but QA flagged problems (see `qa_re
 
 ### Scheduling
 
-**GitHub Actions** (included, `.github/workflows/daily.yml`): runs at 13:07 UTC daily and on demand. Add repository
-secrets `ANTHROPIC_API_KEY`, `YT_TOKEN_JSON` (and optionally `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`). Each run
-checks out huashu-art-motion, installs ffmpeg + Chromium, builds, uploads, keeps `final.mp4`, `sheet.jpg` and the QA
-report as a 7-day artifact, and commits `topics.yaml` + `state/history.json` back. Change the cron line to your
+**Claude Code cloud Routine** (what is set up now, 06:07 America/Toronto daily): a fresh session runs `shorts next`,
+writes `plan.json` itself (the session is Claude, so no Anthropic API key is needed), runs
+`shorts build --plan plan.json --record`, looks at the sheet, and hands you `final.mp4`, `sheet.jpg` and `publish.txt`;
+you upload by hand. It reads `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` and optionally `YT_TOKEN_JSON` from the cloud
+environment's secrets (without the ElevenLabs pair it uses the free edge-tts voice).
+
+**GitHub Actions** (included, `.github/workflows/daily.yml`): the same job on GitHub's runners, build-only by default
+(set the `publish` input to upload). Add repository secrets `ANTHROPIC_API_KEY`, `ELEVENLABS_API_KEY`,
+`ELEVENLABS_VOICE_ID`, and `YT_TOKEN_JSON` for stats/upload. Each run keeps `final.mp4`, `sheet.jpg`, `publish.txt`
+and the QA report as a 7-day artifact and commits `topics.yaml` + `state/history.json` back. Change the cron line to your
 audience's time (the previous plan for a Senegal audience was 18:00–21:00 GMT).
 
 **A VPS / your machine**: `scripts/cron.example`.
@@ -131,14 +145,17 @@ report; those are advisory.
 ```
 shorts/cli.py       commands and the pipeline (build, publish, run_day, doctor)
 shorts/plan.py      ShortPlan schema + Claude prompts (structured output)
+shorts/formats.py   the five formats, the b-roll style list, the weighted daily chooser
+shorts/broll.py     hook + b-roll assembly (cards, gallery scenes, concat)
+shorts/stats.py     YouTube view counts → history → per-format scores
 shorts/tts.py       ElevenLabs / edge-tts with word timings
 shorts/specgen.py   plan + word times → huashu clip spec
-shorts/captions.py  ASS word-by-word captions
+shorts/captions.py  ASS word-by-word captions + big beat captions
 shorts/render.py    huashu render, audio mix (loudnorm, ducking), final encode, contact sheet
 shorts/qa.py        checks, STT comparison, huashu qa
 shorts/youtube.py   OAuth + resumable upload
 shorts/state.py     history.json + topics.yaml
-fixtures/           an example plan to test without any API key
+fixtures/           example plans (list, hook_broll) to test without any API key
 ```
 
 ## Conventions (from LEARNINGS.md)

@@ -55,7 +55,8 @@ def with_script_tokens(words: list[Word], narration: str) -> list[Word]:
     return out
 
 
-def build_ass(cfg: Config, words: list[Word], offset: float, total: float, out_path: Path, narration: str = "") -> Path:
+def build_ass(cfg: Config, words: list[Word], offset: float, total: float, out_path: Path, narration: str = "",
+              overlays: list[tuple[str, float, float]] | None = None) -> Path:
     """`offset` shifts word times (the voice lead); `total` is the film duration."""
     words = with_script_tokens(words, narration)
     W, H = cfg.width, cfg.height
@@ -69,16 +70,19 @@ def build_ass(cfg: Config, words: list[Word], offset: float, total: float, out_p
     outline = int(cfg.get("captions.outline", 5))
     margin_v = max(0, H - bottom)
 
+    big_size = int(cfg.get("captions.big_size", 112))
+    big_margin = int(cfg.get("video.safe_top", 200)) + 140
     header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {W}
 PlayResY: {H}
-WrapStyle: 2
+WrapStyle: 0
 ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Cap,{font},{size},{primary},{primary},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,{outline},0,2,60,60,{margin_v},1
+Style: Big,{font},{big_size},{primary},{primary},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,{outline + 2},0,8,90,90,{big_margin},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -97,5 +101,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 t = _clean(ww.text, upper)
                 parts.append(f"{{\\c{active}}}{t}{{\\c{primary}}}" if k == wi else t)
             lines.append(f"Dialogue: 0,{_ts(start)},{_ts(end)},Cap,,0,0,0,,{' '.join(parts)}")
+    for text, start, end in (overlays or []):
+        if end - start < 0.3 or not text.strip():
+            continue
+        lines.append(f"Dialogue: 1,{_ts(start)},{_ts(end)},Big,,0,0,0,,{{\\fad(160,160)}}{_clean(text, upper)}")
     out_path.write_text(header + "\n".join(lines) + "\n", encoding="utf-8")
     return out_path

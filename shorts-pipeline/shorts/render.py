@@ -74,12 +74,12 @@ def measure_loudness(path: Path) -> float | None:
     return float(m[-1]) if m else None
 
 
-def finish(cfg: Config, silent: Path, voice: Voice, duration: float, out_dir: Path) -> Path:
+def finish(cfg: Config, silent: Path, voice: Voice, duration: float, out_dir: Path, overlays: list | None = None) -> Path:
     final = out_dir / "final.mp4"
     mix = mix_audio(cfg, voice, duration, out_dir)
     vf = []
     if bool(cfg.get("captions.enabled", True)):
-        ass = build_ass(cfg, voice.words, float(cfg.get("video.voice_lead_s", 0.4)), duration, out_dir / "captions.ass", narration=voice.text)
+        ass = build_ass(cfg, voice.words, float(cfg.get("video.voice_lead_s", 0.4)), duration, out_dir / "captions.ass", narration=voice.text, overlays=overlays)
         fonts_dir = cfg.get("captions.fonts_dir") or ""
         opt = f"ass='{_ass_escape(ass)}'" + (f":fontsdir='{_ass_escape(Path(fonts_dir))}'" if fonts_dir else "")
         vf.append(opt)

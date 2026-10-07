@@ -41,6 +41,7 @@ captions:
   color: "#FFFFFF"
   active_color: "#FFC83C" # the word being spoken
   outline: 5
+  big_size: 96            # b-roll segment captions (top of frame, wraps to two lines)
 
 voice:
   provider: auto          # auto -> elevenlabs when ELEVENLABS_API_KEY is set, else edge
@@ -72,6 +73,16 @@ publish:
   made_for_kids: false
   publish_at: ""          # RFC3339 like 2026-10-08T14:00:00Z to schedule; leave blank to go live on upload
   notify_subscribers: true
+
+formats:
+  # Relative chance of each format. 0 disables it. The chooser never repeats the last day's format and, once
+  # `shorts stats` has linked published videos, multiplies these by how each format has performed.
+  weights: { list: 1.0, hook_broll: 1.3, explainer: 1.0, keynote: 0.6, data: 0.3 }
+  no_repeat_days: 1
+  broll:
+    styles: []            # subset of huashu gallery scene ids to allow; empty = all 35
+    max_segment_s: 7      # a beat longer than this is still one scene; the cap keeps renders under ~10 min
+    end_card_s: 2.5       # minimum length of the closing card
 
 llm:
   model: claude-opus-5-5
