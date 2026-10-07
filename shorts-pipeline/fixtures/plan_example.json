@@ -1,0 +1,22 @@
+{
+  "topic": "Three habits of senior engineers that juniors skip",
+  "language": "en",
+  "grammar": "y5_kinetic_type",
+  "title": "3 habits senior engineers never skip",
+  "description": "Three small habits that separate senior engineers from juniors: read first, name things, and leave the code better than you found it.",
+  "tags": ["engineering", "career", "coding tips"],
+  "data": {},
+  "cues": [
+    {"kind": "title", "text": "3 habits of senior engineers", "sub": "that juniors skip",
+     "narration": "Three habits of senior engineers that juniors skip."},
+    {"kind": "point", "text": "Read first", "sub": "before writing a single line", "label": "01", "key": "single line",
+     "narration": "One. Read first. Spend two minutes in the code before you write a single line."},
+    {"kind": "point", "text": "Name things", "sub": "so the next person understands", "label": "02", "key": "next person",
+     "narration": "Two. Name things so the next person understands them without asking you."},
+    {"kind": "point", "text": "Leave it better", "sub": "one small fix per visit", "label": "03", "key": "small fix",
+     "narration": "Three. Leave it better than you found it. One small fix per visit, every visit."},
+    {"kind": "highlight", "word": "better",
+     "narration": "Better, not perfect."}
+  ],
+  "outro": "Follow for one build lesson a day."
+}

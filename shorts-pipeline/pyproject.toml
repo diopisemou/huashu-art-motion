@@ -1,0 +1,28 @@
+[project]
+name = "shorts-pipeline"
+version = "0.1.0"
+description = "Daily automated YouTube Shorts: Claude writes, TTS speaks, huashu-art-motion animates, ffmpeg captions, YouTube publishes."
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=1.12.0",
+    "pydantic>=2.7",
+    "pyyaml>=6.0",
+    "requests>=2.32",
+    "edge-tts>=7.0",
+    "playwright==1.56.0",
+    "numpy>=1.26",
+    "pillow>=10.0",
+    "google-api-python-client>=2.150",
+    "google-auth-oauthlib>=1.2",
+    "google-auth-httplib2>=0.2",
+]
+
+[project.scripts]
+shorts = "shorts.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["shorts"]

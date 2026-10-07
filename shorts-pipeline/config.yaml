@@ -1,0 +1,83 @@
+# shorts-pipeline configuration. Secrets live in the environment / .env, never here.
+
+channel:
+  name: "Bidew Builds"
+  # The brief steers every script. Make it specific: who watches, what they get, what to avoid.
+  brief: >
+    Daily 30–50 second explainers for indie makers and engineers who build software products with AI.
+    Each short teaches ONE concrete, usable idea: a workflow, a mental model, a mistake to avoid, a tool pattern.
+    Plain words, no hype, no "game changer". Speak like a senior colleague at a whiteboard.
+  audience: "indie hackers, product engineers, technical founders"
+  language: en            # BCP-47-ish: en, fr, zh, ar ... drives the TTS voice and the script language
+  cta: "Follow for one build lesson a day."
+  # Appended to every description. Set to "" to disable.
+  disclosure: "Narration is AI-generated. Visuals are drawn in code."
+
+video:
+  width: 1080
+  height: 1920
+  fps: 30
+  max_seconds: 58         # hard ceiling; the pipeline fails QA above it
+  min_seconds: 15
+  # Burned captions live in this band (px from the top). The animation keeps out of it via spec.safe.
+  caption_band: { top: 1400, bottom: 1560 }
+  safe_top: 200           # phone UI (channel name, etc.) sits over the top of a Short
+  # Which huashu-art-motion grammars Claude may pick. Text-only grammars only: no screenshots are needed.
+  grammars: [y5_kinetic_type, y3_whiteboard, t1_3b1b, y1_kurzgesagt, t2_keynote_ui, t3_finance_chart]
+  default_grammar: y5_kinetic_type
+  crf: 18
+  music: ""               # optional path to a music bed (mp3/wav). Ducked under the voice.
+  music_gain_db: -22
+  voice_lead_s: 0.4       # silence before the voice starts (the title cue lands at t=0)
+  tail_s: 0.9             # hold after the last word
+
+captions:
+  enabled: true
+  font: "DejaVu Sans"     # any font libass can find; for zh/ja/ko install Noto Sans CJK and set it here
+  fonts_dir: ""           # extra directory of .ttf/.otf files, optional
+  size: 76
+  max_chars_per_page: 22  # ~3–4 words per page
+  uppercase: false
+  color: "#FFFFFF"
+  active_color: "#FFC83C" # the word being spoken
+  outline: 5
+
+voice:
+  provider: auto          # auto -> elevenlabs when ELEVENLABS_API_KEY is set, else edge
+  elevenlabs:
+    model_id: eleven_multilingual_v2
+    voice_id: ""          # or set ELEVENLABS_VOICE_ID
+    stability: 0.5
+    similarity_boost: 0.75
+    speed: 1.0            # 0.7–1.2
+  edge:
+    voice: en-US-AndrewMultilingualNeural   # `uv run edge-tts --list-voices` to browse
+    rate: "+5%"
+    # per-language defaults used when `voice` is left blank
+    voices_by_language:
+      en: en-US-AndrewMultilingualNeural
+      fr: fr-FR-RemyMultilingualNeural
+      zh: zh-CN-XiaoxiaoNeural
+      ar: ar-TN-HediNeural
+      pt: pt-BR-AntonioNeural
+      es: es-ES-AlvaroNeural
+      de: de-DE-FlorianMultilingualNeural
+  stt_check: auto         # auto -> run an ElevenLabs Scribe transcription check when the key is set
+
+publish:
+  privacy: public         # public | unlisted | private
+  category_id: "28"       # 28 = Science & Technology, 27 = Education, 22 = People & Blogs
+  title_suffix: " #Shorts"
+  tags_base: [shorts, ai, buildinpublic]
+  made_for_kids: false
+  publish_at: ""          # RFC3339 like 2026-10-08T14:00:00Z to schedule; leave blank to go live on upload
+  notify_subscribers: true
+
+llm:
+  model: claude-opus-5-5
+  effort: high
+  max_words: 125          # narration budget; ~45 s at a brisk pace
+
+topics:
+  autofill: true          # when topics.yaml is empty, ask Claude for a new batch
+  batch: 7

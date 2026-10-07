@@ -1,0 +1,23 @@
+# outputs and media: never commit video, audio or rendered frames
+out/
+vendor/
+*.mp4
+*.mov
+*.mp3
+*.wav
+*.m4a
+*.png
+*.jpg
+!assets/**/*.png
+!assets/**/*.jpg
+# secrets
+.env
+keys.env
+client_secret*.json
+token*.json
+# python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+secrets/

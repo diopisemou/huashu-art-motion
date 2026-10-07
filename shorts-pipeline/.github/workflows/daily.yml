@@ -1,0 +1,92 @@
+name: daily-short
+
+on:
+  schedule:
+    # 13:07 UTC every day. Odd minute on purpose: on-the-hour cron runs are delayed on GitHub.
+    - cron: "7 13 * * *"
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Topic (blank = next from topics.yaml)"
+        required: false
+        default: ""
+      publish:
+        description: "Upload to YouTube"
+        type: boolean
+        default: true
+
+concurrency:
+  group: daily-short
+  cancel-in-progress: false
+
+jobs:
+  short:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write   # to commit state/history.json and topics.yaml back
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out huashu-art-motion (the animation engine)
+        uses: actions/checkout@v4
+        with:
+          repository: alchaincyf/huashu-art-motion
+          path: vendor/huashu-art-motion
+
+      - name: System packages (ffmpeg, caption fonts)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q ffmpeg fonts-dejavu-core fonts-noto-cjk
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: |
+          uv sync --frozen || uv sync
+          uv run playwright install --with-deps chromium
+
+      - name: Doctor
+        env:
+          HUASHU_DIR: ${{ github.workspace }}/vendor/huashu-art-motion
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          YT_TOKEN_JSON: ${{ secrets.YT_TOKEN_JSON }}
+        run: uv run shorts doctor || true
+
+      - name: Make today's short
+        env:
+          HUASHU_DIR: ${{ github.workspace }}/vendor/huashu-art-motion
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
+          YT_TOKEN_JSON: ${{ secrets.YT_TOKEN_JSON }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "${{ inputs.publish }}" = "true" ]; then ARGS="--publish"; fi
+          if [ -n "${{ inputs.topic }}" ]; then ARGS="$ARGS --topic \"${{ inputs.topic }}\""; fi
+          eval uv run shorts run $ARGS
+
+      - name: Keep the video, sheet and QA report for a week
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: short-${{ github.run_id }}
+          path: |
+            out/**/final.mp4
+            out/**/sheet.jpg
+            out/**/plan.json
+            out/**/qa_report.md
+            out/**/manifest.json
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Commit queue and history
+        if: always()
+        run: |
+          git config user.name "shorts-bot"
+          git config user.email "shorts-bot@users.noreply.github.com"
+          git add topics.yaml state/history.json || true
+          git diff --cached --quiet || git commit -m "daily short: update topic queue and history [skip ci]"
+          git push || true

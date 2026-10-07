@@ -1,0 +1,9 @@
+# Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
+# One line per topic. Keep them specific: a claim, a mistake, a number, a comparison.
+- "Why your AI coding agent keeps rewriting files it should not touch, and the one rule that stops it"
+- "Read the code before you prompt: the 2-minute habit that halves agent mistakes"
+- "Three signs your prompt is a spec, not a wish"
+- "Ship the boring version first: how daily shorts get made by a script"
+- "Stop asking AI for the whole feature. Ask for the test first."
+- "The 80/20 of code review when the author is a model"
+- "Name things so the next person understands, even if the next person is a model"
