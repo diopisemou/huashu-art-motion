@@ -64,7 +64,12 @@ Keys (in `.env`, your shell, or GitHub secrets, never in the repo):
 3. **OAuth consent screen**: add your Google account as a test user. While the app is in *Testing*, refresh tokens
    expire after 7 days; set the publishing status to **In production** for a token that keeps working (the
    "unverified app" screen is fine for your own account).
-4. `uv run shorts auth` → open the printed URL, approve → `secrets/token.json`.
+4. `uv run shorts auth` → open the printed URL, approve → `secrets/token.json`. From a machine without a browser
+   use `uv run shorts auth --device` (type a code at google.com/device; needs an OAuth client of type "TVs and
+   Limited Input devices").
+5. Automatic publishing: put the content of `secrets/token.json` into the environment secret `YT_TOKEN_JSON` (cloud
+   Routine) and/or the GitHub secret of the same name. The daily run then uploads with `publish.privacy` and records
+   the video id; without the token it only builds and hands you the file.
 
 Two YouTube facts that bite automated channels:
 
@@ -98,9 +103,9 @@ Exit code 0 = built and QA passed, 2 = built but QA flagged problems (see `qa_re
 
 **Claude Code cloud Routine** (what is set up now, 06:07 America/Toronto daily): a fresh session runs `shorts next`,
 writes `plan.json` itself (the session is Claude, so no Anthropic API key is needed), runs
-`shorts build --plan plan.json --record`, looks at the sheet, and hands you `final.mp4`, `sheet.jpg` and `publish.txt`;
-you upload by hand. It reads `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` and optionally `YT_TOKEN_JSON` from the cloud
-environment's secrets (without the ElevenLabs pair it uses the free edge-tts voice).
+`shorts build --plan plan.json --record`, looks at the sheet, then publishes with `shorts publish out/<dir>` when
+`YT_TOKEN_JSON` is set (otherwise it hands you `final.mp4`, `sheet.jpg` and `publish.txt` to upload by hand). It
+reads `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` and `YT_TOKEN_JSON` from the cloud environment's secrets.
 
 **GitHub Actions** (included, `.github/workflows/daily.yml`): the same job on GitHub's runners, build-only by default
 (set the `publish` input to upload). Add repository secrets `ANTHROPIC_API_KEY`, `ELEVENLABS_API_KEY`,
@@ -153,7 +158,7 @@ shorts/specgen.py   plan + word times → huashu clip spec
 shorts/captions.py  ASS word-by-word captions + big beat captions
 shorts/render.py    huashu render, audio mix (loudnorm, ducking), final encode, contact sheet
 shorts/qa.py        checks, STT comparison, huashu qa
-shorts/youtube.py   OAuth + resumable upload
+shorts/youtube.py   OAuth (browser or device code) + resumable upload
 shorts/state.py     history.json + topics.yaml
 fixtures/           example plans (list, hook_broll) to test without any API key
 ```

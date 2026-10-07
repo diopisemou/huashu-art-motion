@@ -242,7 +242,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--plan", type=Path, required=True)
     p.add_argument("--times", default="0.5,3,6,9")
 
-    sub.add_parser("auth", help="one-time YouTube OAuth; writes secrets/token.json")
+    p = sub.add_parser("auth", help="one-time YouTube OAuth; writes secrets/token.json")
+    p.add_argument("--device", action="store_true", help="device-code flow: type a short code at google.com/device (works from any terminal)")
 
     p = sub.add_parser("topics", help="show / add / auto-fill the topic queue")
     p.add_argument("--add", action="append", default=[])
@@ -352,7 +353,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if a.cmd == "auth":
         from .youtube import authorize
-        authorize(cfg)
+        authorize(cfg, device=a.device)
         return 0
     if a.cmd == "topics":
         from .state import fill_topics, load_topics, save_topics
