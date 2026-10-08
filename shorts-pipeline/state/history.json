@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-10-08T10:12:00+00:00",
+    "topic": "Containers vs virtual machines, explained in 60 seconds",
+    "title": "Containers vs virtual machines in 60 seconds",
+    "format": "list",
+    "grammar": "y5_kinetic_type",
+    "duration": 29.5,
+    "qa_ok": true,
+    "video_id": null,
+    "out_dir": "out/2026-10-08-containers-vs-virtual-machines-in-60-seconds",
+    "note": "built by the 06:07 Routine on 2026-10-08; publish was blocked by the session permission classifier, uploaded manually by Bachir"
+  }
+]

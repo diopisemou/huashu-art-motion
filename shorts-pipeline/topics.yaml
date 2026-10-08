@@ -1,15 +1,11 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-# One line per topic. Keep them specific: a claim, a mistake, a number, a comparison.
-# The channel's best performers so far are "X explained in 60 seconds" dev/AI explainers (Docker vs Kubernetes 379 views,
-# DevOps 367, Multimodal AI 111, median 26), so the queue leads with that shape.
-- "Containers vs virtual machines, explained in 60 seconds"
-- "What an AI agent actually is, explained in 60 seconds (it is a loop, not a chatbot)"
-- "CI/CD explained in 60 seconds: why every push runs the tests"
-- "RAG explained in 60 seconds: how a chatbot reads your documents"
-- "Why your AI coding agent keeps rewriting files it should not touch, and the one rule that stops it"
-- "Read the code before you prompt: the 2-minute habit that halves agent mistakes"
-- "Three signs your prompt is a spec, not a wish"
-- "Ship the boring version first: how daily shorts get made by a script"
-- "Stop asking AI for the whole feature. Ask for the test first."
-- "The 80/20 of code review when the author is a model"
-- "Name things so the next person understands, even if the next person is a model"
+- What an AI agent actually is, explained in 60 seconds (it is a loop, not a chatbot)
+- 'CI/CD explained in 60 seconds: why every push runs the tests'
+- 'RAG explained in 60 seconds: how a chatbot reads your documents'
+- Why your AI coding agent keeps rewriting files it should not touch, and the one rule that stops it
+- 'Read the code before you prompt: the 2-minute habit that halves agent mistakes'
+- Three signs your prompt is a spec, not a wish
+- 'Ship the boring version first: how daily shorts get made by a script'
+- Stop asking AI for the whole feature. Ask for the test first.
+- The 80/20 of code review when the author is a model
+- Name things so the next person understands, even if the next person is a model
