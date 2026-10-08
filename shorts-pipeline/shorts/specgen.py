@@ -88,11 +88,11 @@ def _plan_data(plan: ShortPlan) -> dict:
     return out
 
 
-def build_spec(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path) -> tuple[dict, Path]:
+def build_spec(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path, end_at: float | None = None) -> tuple[dict, Path]:
     lead = float(cfg.get("video.voice_lead_s", 0.4))
     tail = float(cfg.get("video.tail_s", 0.9))
     fps = cfg.fps
-    duration = round(lead + voice.duration + tail, 2)
+    duration = round(end_at if end_at else lead + voice.duration + tail, 2)
     offsets = cue_offsets(plan)
 
     cues, last_at = [], -1.0

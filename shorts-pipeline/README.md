@@ -19,6 +19,11 @@ Five formats rotate so the channel does not look the same every day: `list`, `ho
 moving b-roll + CTA card), `explainer`, `keynote`, `data`. The chooser never repeats yesterday's format and, once
 `shorts stats` has linked your published videos, weights formats by how they perform. See [FORMATS.md](FORMATS.md).
 
+## Earning
+
+Links in every description and end card, a pinned-comment text, cross-posting to TikTok / Reels / Facebook through
+Postiz, retention-weighted format choice and a second daily run: see [MONETIZE.md](MONETIZE.md).
+
 ## What a run produces
 
 `out/<date>-<slug>/`
@@ -151,8 +156,9 @@ report; those are advisory.
 shorts/cli.py       commands and the pipeline (build, publish, run_day, doctor)
 shorts/plan.py      ShortPlan schema + Claude prompts (structured output)
 shorts/formats.py   the five formats, the b-roll style list, the weighted daily chooser
-shorts/broll.py     hook + b-roll assembly (cards, gallery scenes, concat)
-shorts/stats.py     YouTube view counts → history → per-format scores
+shorts/broll.py     hook + b-roll assembly (cards, gallery scenes, concat) and the end card every format uses
+shorts/stats.py     YouTube views + Analytics retention → history → per-format scores
+shorts/crosspost.py Postiz cross-posting (TikTok, Instagram, Facebook, Threads, LinkedIn)
 shorts/tts.py       ElevenLabs / edge-tts with word timings
 shorts/specgen.py   plan + word times → huashu clip spec
 shorts/captions.py  ASS word-by-word captions + big beat captions

@@ -11,7 +11,8 @@ from .config import Config
 
 log = logging.getLogger("shorts.youtube")
 
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtube.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload", "https://www.googleapis.com/auth/youtube.readonly",
+          "https://www.googleapis.com/auth/yt-analytics.readonly"]   # analytics: per-video retention for the format chooser
 DEVICE_SCOPES = ["https://www.googleapis.com/auth/youtube"]   # the device-code flow only allows the broad YouTube scope
 
 

@@ -23,7 +23,7 @@ def _all_offsets(plan: ShortPlan) -> list[int]:
     return offsets  # len(cues) (+1 when there is an outro)
 
 
-def _render_card(cfg: Config, spec: dict, out: Path) -> Path:
+def render_card(cfg: Config, spec: dict, out: Path) -> Path:
     render_py = cfg.huashu_dir() / "scripts" / "engine" / "render.py"
     spec_path = out.with_suffix(".json")
     write_json(spec_path, spec)
@@ -46,9 +46,33 @@ def _render_scene(cfg: Config, style: str, dur: float, out: Path) -> Path:
     return out
 
 
-def _card_spec(cfg: Config, duration: float, cues: list[dict]) -> dict:
+def card_spec(cfg: Config, duration: float, cues: list[dict]) -> dict:
     return {"grammar": "y5_kinetic_type", "duration": round(duration, 3), "fps": cfg.fps, "width": cfg.width, "height": cfg.height,
             "safe": cfg.safe, "data": {}, "cues": cues}
+
+
+def end_card_spec(cfg: Config, plan: ShortPlan, duration: float) -> dict:
+    """The closing card every format ends on: the CTA (subscribe) and 'link in the description'."""
+    cta = str(cfg.get("channel.cta", plan.outro)).strip().rstrip(".")
+    sub = str(cfg.get("monetize.end_card_sub", "")).strip() or str(cfg.get("channel.name", ""))
+    return card_spec(cfg, duration, [{"at": 0, "kind": "title", "text": cta, "sub": sub}])
+
+
+def outro_start(cfg: Config, plan: ShortPlan, voice: Voice) -> float | None:
+    """Film time at which the outro begins (first word of the outro), frame-snapped; None when there is no outro."""
+    if not plan.outro.strip():
+        return None
+    lead = float(cfg.get("video.voice_lead_s", 0.4))
+    offsets = _all_offsets(plan)
+    t = lead + voice.time_at_char(offsets[-1])
+    return round(round(t * cfg.fps) / cfg.fps, 3)
+
+
+def concat(parts: list[Path], out: Path) -> Path:
+    lst = out.with_suffix(".txt")
+    lst.write_text("".join(f"file '{p.resolve()}'\n" for p in parts), encoding="utf-8")
+    run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(lst), "-c", "copy", str(out)])
+    return out
 
 
 def build_broll_film(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path) -> tuple[Path, float, list[tuple[str, float, float]]]:
@@ -73,7 +97,7 @@ def build_broll_film(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path) 
     hook = plan.cues[0]
     # 1) hook card
     d0 = bounds[1] - bounds[0]
-    segments.append(_render_card(cfg, _card_spec(cfg, d0, [{"at": 0, "kind": "title", "text": hook.text or plan.title, **({"sub": hook.sub} if hook.sub else {})}]),
+    segments.append(render_card(cfg, card_spec(cfg, d0, [{"at": 0, "kind": "title", "text": hook.text or plan.title, **({"sub": hook.sub} if hook.sub else {})}]),
                                  seg_dir / "00_hook.mp4"))
     # 2) b-roll beats
     beats = plan.cues[1:]
@@ -88,9 +112,7 @@ def build_broll_film(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path) 
     # 3) end card over the outro
     if has_outro:
         d_end = bounds[-1] - bounds[-2]
-        cta = str(cfg.get("channel.cta", plan.outro)).strip().rstrip(".")
-        segments.append(_render_card(cfg, _card_spec(cfg, d_end, [{"at": 0, "kind": "title", "text": cta, "sub": str(cfg.get("channel.name", ""))}]),
-                                     seg_dir / "99_end.mp4"))
+        segments.append(render_card(cfg, end_card_spec(cfg, plan, d_end), seg_dir / "99_end.mp4"))
     # 4) concat
     lst = seg_dir / "concat.txt"
     lst.write_text("".join(f"file '{p.name}'\n" for p in segments), encoding="utf-8")

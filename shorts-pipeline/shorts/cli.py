@@ -48,9 +48,24 @@ def build(cfg: Config, plan, out_dir: Path, *, skip_qa: bool = False) -> dict:
         spec_path = out_dir / "segments" / "00_hook.json"       # qa runs on the hook card spec; the scenes are huashu's own
         final = finish(cfg, silent, voice, duration, out_dir, overlays=overlays)
     else:
-        spec, spec_path = build_spec(cfg, plan, voice, out_dir)
-        silent = render_silent(cfg, spec_path, out_dir)
-        final = finish(cfg, silent, voice, spec["duration"], out_dir)
+        from .broll import concat, end_card_spec, outro_start, render_card
+        end_min = float(cfg.get("formats.broll.end_card_s", 2.5))
+        total = round(float(cfg.get("video.voice_lead_s", 0.4)) + voice.duration + float(cfg.get("video.tail_s", 0.9)), 2)
+        t_end = outro_start(cfg, plan, voice) if bool(cfg.get("monetize.end_card", True)) else None
+        if t_end is not None and total - t_end < end_min:
+            t_end = round(round(max(t_end - 0.0, total - end_min) * cfg.fps) / cfg.fps, 3)
+        if t_end is not None and t_end > 3.0:
+            spec, spec_path = build_spec(cfg, plan, voice, out_dir, end_at=t_end)
+            main = render_silent(cfg, spec_path, out_dir)
+            main_part = out_dir / "main.mp4"; main.rename(main_part)
+            card = render_card(cfg, end_card_spec(cfg, plan, total - t_end), out_dir / "end_card.mp4")
+            silent = concat([main_part, card], out_dir / "silent.mp4")
+            duration = total
+        else:
+            spec, spec_path = build_spec(cfg, plan, voice, out_dir)
+            silent = render_silent(cfg, spec_path, out_dir)
+            duration = spec["duration"]
+        final = finish(cfg, silent, voice, duration, out_dir)
     sheet = contact_sheet(final, out_dir)
     report = run_qa(cfg, final, spec_path, voice.wav, narration, out_dir, skip_huashu=plan.format == "hook_broll") if not skip_qa else {"ok": True, "skipped": True}
     write_publish_sheet(cfg, plan, out_dir)
@@ -65,12 +80,46 @@ def build(cfg: Config, plan, out_dir: Path, *, skip_qa: bool = False) -> dict:
     return manifest
 
 
+def money_link(cfg: Config, plan) -> dict | None:
+    """The link that fits this short: first keyword match in monetize.links, else monetize.default_link."""
+    hay = " ".join([plan.topic, plan.title, plan.description, " ".join(plan.tags)]).lower()
+    for item in (cfg.get("monetize.links", []) or []):
+        if any(str(k).lower() in hay for k in (item.get("keywords") or [])) and item.get("url"):
+            return {"name": item.get("name", ""), "url": item["url"]}
+    d = str(cfg.get("monetize.default_link", "") or "").strip()
+    return {"name": "", "url": d} if d else None
+
+
+def pinned_comment(cfg: Config, plan) -> str:
+    tpl = str(cfg.get("monetize.pinned_comment", "") or "")
+    lead = str(cfg.get("monetize.lead_line", "") or "").strip()
+    link = money_link(cfg, plan)
+    link_line = (f"{link['name']}: {link['url']}" if link and link["name"] else (link["url"] if link else ""))
+    return tpl.format(lead_line=(lead + "\n") if lead else "", link_line=(link_line + "\n") if link_line else "").strip()
+
+
+def crosspost_caption(cfg: Config, plan) -> str:
+    cap = int(cfg.get("crosspost.caption_max", 2000))
+    tags = [t for t in (list(cfg.get("publish.tags_base", [])) + list(plan.tags)) if t]
+    hashtags = " ".join("#" + t.replace(" ", "") for t in dict.fromkeys(tags))
+    link = money_link(cfg, plan)
+    parts = [plan.title.strip(), plan.description.strip()]
+    if link:
+        parts.append(f"{link['name'] + ': ' if link['name'] else ''}{link['url']}")
+    parts.append(hashtags)
+    text = "\n\n".join(p for p in parts if p)
+    return text[:cap]
+
+
 def write_publish_sheet(cfg: Config, plan, out_dir: Path) -> Path:
-    """Everything needed to upload by hand: title, description, tags, in one text file."""
+    """Everything needed to upload by hand: title, description, tags, pinned comment, cross-post caption."""
     p = out_dir / "publish.txt"
     tags = list(dict.fromkeys([*cfg.get("publish.tags_base", []), *plan.tags]))
     p.write_text("TITLE\n" + youtube_title(cfg, plan.title) + "\n\nDESCRIPTION\n" + youtube_description(cfg, plan) +
-                 "\n\nTAGS\n" + ", ".join(tags) + f"\n\nFORMAT {plan.format} / GRAMMAR {plan.grammar}\n", encoding="utf-8")
+                 "\n\nTAGS\n" + ", ".join(tags) +
+                 "\n\nPINNED COMMENT (paste after upload; the API cannot pin)\n" + pinned_comment(cfg, plan) +
+                 "\n\nCROSS-POST CAPTION (TikTok / Reels / Facebook)\n" + crosspost_caption(cfg, plan) +
+                 f"\n\nFORMAT {plan.format} / GRAMMAR {plan.grammar}\n", encoding="utf-8")
     return p
 
 
@@ -83,7 +132,17 @@ def youtube_title(cfg: Config, title: str) -> str:
 
 
 def youtube_description(cfg: Config, plan) -> str:
-    parts = [plan.description.strip()]
+    parts = []
+    lead = str(cfg.get("monetize.lead_line", "") or "").strip()
+    if lead:
+        parts.append(lead)                       # the first line shows above the fold on a Short
+    parts.append(plan.description.strip())
+    link = money_link(cfg, plan)
+    if link:
+        parts.append(f"{link['name'] + ': ' if link['name'] else 'More: '}{link['url']}")
+        aff = str(cfg.get("monetize.affiliate_disclosure", "") or "").strip()
+        if aff:
+            parts.append(aff)
     disclosure = str(cfg.get("channel.disclosure", "") or "").strip()
     if disclosure:
         parts.append(disclosure)
@@ -108,6 +167,13 @@ def publish(cfg: Config, out_dir: Path, *, dry_run: bool = False, privacy: str |
     manifest["youtube"] = res
     write_json(out_dir / "manifest.json", manifest)
     if not dry_run:
+        try:
+            from .crosspost import crosspost as _xp
+            xp = _xp(cfg, plan, out_dir)
+            if xp:
+                manifest["crosspost"] = xp; write_json(out_dir / "manifest.json", manifest)
+        except Exception as e:  # cross-posting never blocks the YouTube publish
+            log.warning("cross-post failed: %s", str(e)[:400])
         from .state import history_path, load_history
         hist = load_history(cfg)
         for h in reversed(hist):
@@ -222,6 +288,10 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("stats", help="pull YouTube view counts, link them to built shorts by title, score the formats")
 
+    p = sub.add_parser("crosspost", help="post an already built out/<dir> to TikTok / Instagram / Facebook / ... through Postiz")
+    p.add_argument("dir", type=Path)
+    p.add_argument("--dry-run", action="store_true")
+
     p = sub.add_parser("build", help="voice + render + qa from an existing plan.json (no Claude API call)")
     p.add_argument("--plan", type=Path, required=True)
     p.add_argument("--out-name")
@@ -283,6 +353,13 @@ def main(argv: list[str] | None = None) -> int:
             st = h.get("stats") or {}
             print(f"{h.get('date','')[:10]:10}  {h.get('format','?'):10}  {st.get('views','-'):>7}  {h.get('title','')[:60]}")
         print("scores:", scores if scores else "(no YouTube token or no matches yet)")
+        return 0
+    if a.cmd == "crosspost":
+        from .crosspost import crosspost
+        from .plan import ShortPlan
+        plan = ShortPlan.model_validate(read_json(a.dir / "plan.json"))
+        res = crosspost(cfg, plan, a.dir, dry_run=a.dry_run, force=True)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
         return 0
     if a.cmd == "build":
         from .plan import ShortPlan

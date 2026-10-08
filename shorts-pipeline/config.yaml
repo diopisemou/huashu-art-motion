@@ -9,7 +9,7 @@ channel:
     Plain words, no hype, no "game changer". Speak like a senior colleague at a whiteboard.
   audience: "indie hackers, product engineers, technical founders"
   language: en            # BCP-47-ish: en, fr, zh, ar ... drives the TTS voice and the script language
-  cta: "Follow for one build lesson a day."
+  cta: "Subscribe for one build lesson a day."
   # Appended to every description. Set to "" to disable.
   disclosure: "Narration is AI-generated. Visuals are drawn in code."
 
@@ -73,6 +73,26 @@ publish:
   made_for_kids: false
   publish_at: ""          # RFC3339 like 2026-10-08T14:00:00Z to schedule; leave blank to go live on upload
   notify_subscribers: true
+
+monetize:
+  # Money levers that do not depend on YouTube's Partner Program. Fill the URLs and they go into every description,
+  # the end card ("link in the description") and the pinned-comment text in publish.txt.
+  lead_line: ""                 # first line of every description, e.g. "Free deploy checklist: https://bidew.io/checklist"
+  default_link: ""              # fallback link when no keyword matches, e.g. your product or newsletter
+  links: []                     # keyword-matched links, first match wins. Example:
+  #  - { name: "Clawexa", url: "https://clawexa.com", keywords: [agent, deploy, automation] }
+  #  - { name: "RideSentinel", url: "https://ridesentinel.app", keywords: [driver, uber, ride] }
+  end_card: true                # closing card on every format: the CTA + end_card_sub
+  end_card_sub: "link in the description"
+  pinned_comment: "{lead_line}{link_line}What should I explain in 60 seconds next? Tell me below."   # written to publish.txt; paste it as the pinned comment
+  affiliate_disclosure: "Some links may be affiliate links."   # appended when a link is present; "" to disable
+
+crosspost:
+  enabled: auto                 # auto -> when POSTIZ_API_KEY is set and the `postiz` CLI is installed; true/false to force
+  integrations: []              # Postiz integration ids; empty = every connected channel whose provider is listed below
+  providers: [tiktok, instagram, facebook, threads, linkedin]
+  caption_max: 2000
+  delay_minutes: 3              # schedule a few minutes out so the upload is verified before publishing
 
 formats:
   # Relative chance of each format. 0 disables it. The chooser never repeats the last day's format and, once
