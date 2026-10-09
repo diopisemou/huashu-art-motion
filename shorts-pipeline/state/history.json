@@ -46,6 +46,26 @@
     "video_id": "QVA6aC4Euns",
     "out_dir": "out/2026-10-09-cicd-explained-in-60-seconds",
     "url": "https://youtube.com/shorts/QVA6aC4Euns",
-    "note": "first fully automated publish (in-session Routine); loudness re-mixed from -17.9 to -14.4 LUFS before upload"
+    "note": "first fully automated publish (in-session Routine); loudness re-mixed from -17.9 to -14.4 LUFS before upload; cross-posted to TikTok @bidewio",
+    "stats": {
+      "views": 122,
+      "likes": 0,
+      "comments": 0,
+      "published_at": "2026-10-09T14:19:24Z",
+      "fetched": "2026-10-09T19:09:56+00:00"
+    }
+  },
+  {
+    "date": "2026-10-09T19:19:22+00:00",
+    "topic": "RAG explained in 60 seconds: how a chatbot reads your documents",
+    "title": "RAG explained in 60 seconds",
+    "format": "explainer",
+    "grammar": "y3_whiteboard",
+    "duration": 39.8,
+    "qa_ok": true,
+    "video_id": "WetncE2MpkQ",
+    "out_dir": "out/2026-10-09-rag-explained-in-60-seconds",
+    "url": "https://youtube.com/shorts/WetncE2MpkQ",
+    "note": "first y1_kurzgesagt render had the top node colliding with the title; rebuilt once as y3_whiteboard; cross-posted to TikTok @bidewio"
   }
 ]

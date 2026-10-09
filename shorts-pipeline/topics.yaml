@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'RAG explained in 60 seconds: how a chatbot reads your documents'
 - Why your AI coding agent keeps rewriting files it should not touch, and the one rule that stops it
 - 'Read the code before you prompt: the 2-minute habit that halves agent mistakes'
 - Three signs your prompt is a spec, not a wish
