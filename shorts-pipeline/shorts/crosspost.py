@@ -49,7 +49,9 @@ def enabled(cfg: Config) -> bool:
             log.warning("crosspost.enabled is true but the postiz CLI is not installed (npm install -g postiz)")
         return False
     try:
-        _cli(["auth:status"], timeout=60)
+        status = _cli(["auth:status"], timeout=60)
+        if "no authentication" in status.lower() or "not authenticated" in status.lower():
+            raise RuntimeError(status[-300:])   # the CLI exits 0 even when nothing is configured
         return True
     except Exception as e:
         if want in (True, "true", "on", "yes"):
