@@ -89,7 +89,9 @@ monetize:
 
 crosspost:
   enabled: auto                 # auto -> when POSTIZ_API_KEY is set and the `postiz` CLI is installed; true/false to force
-  integrations: []              # Postiz integration ids; empty = every connected channel whose provider is listed below
+  integrations: [cmv17tec00dioqz0ypufsdzu2]   # Postiz integration ids; empty = every connected channel whose provider is listed below.
+                                              # cmv17tec00dioqz0ypufsdzu2 = TikTok "Bidew IO" (@bidewio). The RideSentinel TikTok/Facebook
+                                              # accounts are a different product, and YouTube is uploaded directly by `shorts publish`.
   providers: [tiktok, instagram, facebook, threads, linkedin]
   caption_max: 2000
   delay_minutes: 3              # schedule a few minutes out so the upload is verified before publishing

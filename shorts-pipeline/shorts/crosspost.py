@@ -17,7 +17,11 @@ log = logging.getLogger("shorts.crosspost")
 
 # Provider settings that make a video actually publish (Postiz silently discards settings that do not apply).
 PROVIDER_SETTINGS: dict[str, dict] = {
-    "tiktok": {"privacy_level": "PUBLIC_TO_EVERYONE", "duet": True, "stitch": True, "content_posting_method": "DIRECT_POST"},
+    # TikTok Business requires every one of these; `title` is filled per post from the plan. DIRECT_POST publishes
+    # (UPLOAD only drops a draft in the app inbox). video_made_with_ai is on because the narration is synthetic.
+    "tiktok": {"content_posting_method": "DIRECT_POST", "privacy_level": "PUBLIC_TO_EVERYONE", "duet": True, "stitch": True,
+               "comment": True, "autoAddMusic": "no", "brand_content_toggle": False, "brand_organic_toggle": False,
+               "video_made_with_ai": True},
     "instagram": {"post_type": "post"},
     "facebook": {},
     "threads": {},
@@ -100,7 +104,9 @@ def crosspost(cfg: Config, plan, out_dir: Path, *, dry_run: bool = False, force:
     if not media:
         raise RuntimeError("postiz upload returned no path")
     for t in targets:
-        settings = PROVIDER_SETTINGS.get(t["provider"], {})
+        settings = dict(PROVIDER_SETTINGS.get(t["provider"], {}))
+        if t["provider"] == "tiktok":
+            settings["title"] = plan.title[:90]
         args = ["posts:create", "-c", caption, "-s", when, "-m", media, "-i", t["id"]]
         if settings:
             args += ["--settings", json.dumps(settings)]
