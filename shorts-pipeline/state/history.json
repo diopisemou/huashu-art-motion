@@ -34,5 +34,18 @@
     "video_id": null,
     "out_dir": "out/2026-10-09-what-an-ai-agent-actually-is-explained-in-60-sec",
     "note": "DUPLICATE of the 2026-10-08 afternoon topic (that run's state never reached the branch); not to be uploaded unless Bachir prefers this version"
+  },
+  {
+    "date": "2026-10-09T14:16:12+00:00",
+    "topic": "CI/CD explained in 60 seconds: why every push runs the tests",
+    "title": "CI/CD explained in 60 seconds",
+    "format": "hook_broll",
+    "grammar": "y5_kinetic_type",
+    "duration": 33.33,
+    "qa_ok": true,
+    "video_id": "QVA6aC4Euns",
+    "out_dir": "out/2026-10-09-cicd-explained-in-60-seconds",
+    "url": "https://youtube.com/shorts/QVA6aC4Euns",
+    "note": "first fully automated publish (in-session Routine); loudness re-mixed from -17.9 to -14.4 LUFS before upload"
   }
 ]
