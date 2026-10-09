@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv sync)",
+      "Bash(uv run shorts:*)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push origin HEAD:shorts-pipeline)",
+      "Bash(git push origin shorts-pipeline)",
+      "Bash(npm install -g postiz)",
+      "Bash(postiz:*)"
+    ]
+  }
+}
