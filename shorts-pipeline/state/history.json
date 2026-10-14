@@ -67,5 +67,18 @@
     "out_dir": "out/2026-10-09-rag-explained-in-60-seconds",
     "url": "https://youtube.com/shorts/WetncE2MpkQ",
     "note": "first y1_kurzgesagt render had the top node colliding with the title; rebuilt once as y3_whiteboard; cross-posted to TikTok @bidewio"
+  },
+  {
+    "date": "2026-10-14T06:21:10+00:00",
+    "topic": "Why your AI coding agent keeps rewriting files it should not touch, and the one rule that stops it",
+    "title": "Why your AI agent rewrites files it should not touch",
+    "format": "list",
+    "grammar": "y5_kinetic_type",
+    "duration": 38.67,
+    "qa_ok": true,
+    "video_id": "IfvP8Mjifbg",
+    "out_dir": "out/2026-10-14-why-your-ai-agent-rewrites-files-it-should-not-t",
+    "url": "https://youtube.com/shorts/IfvP8Mjifbg",
+    "note": "catch-up build after the session worker was down Oct 10-13 (eight scheduled runs missed); Postiz upload 502'd once and succeeded on retry; cross-posted to TikTok @bidewio"
   }
 ]
