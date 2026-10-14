@@ -48,11 +48,11 @@
     "url": "https://youtube.com/shorts/QVA6aC4Euns",
     "note": "first fully automated publish (in-session Routine); loudness re-mixed from -17.9 to -14.4 LUFS before upload; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 122,
+      "views": 225,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-09T19:09:56+00:00"
+      "fetched": "2026-10-14T06:15:59+00:00"
     }
   },
   {
@@ -66,7 +66,14 @@
     "video_id": "WetncE2MpkQ",
     "out_dir": "out/2026-10-09-rag-explained-in-60-seconds",
     "url": "https://youtube.com/shorts/WetncE2MpkQ",
-    "note": "first y1_kurzgesagt render had the top node colliding with the title; rebuilt once as y3_whiteboard; cross-posted to TikTok @bidewio"
+    "note": "first y1_kurzgesagt render had the top node colliding with the title; rebuilt once as y3_whiteboard; cross-posted to TikTok @bidewio",
+    "stats": {
+      "views": 24,
+      "likes": 0,
+      "comments": 0,
+      "published_at": "2026-10-09T19:27:06Z",
+      "fetched": "2026-10-14T06:15:59+00:00"
+    }
   },
   {
     "date": "2026-10-14T06:21:10+00:00",
@@ -80,5 +87,18 @@
     "out_dir": "out/2026-10-14-why-your-ai-agent-rewrites-files-it-should-not-t",
     "url": "https://youtube.com/shorts/IfvP8Mjifbg",
     "note": "catch-up build after the session worker was down Oct 10-13 (eight scheduled runs missed); Postiz upload 502'd once and succeeded on retry; cross-posted to TikTok @bidewio"
+  },
+  {
+    "date": "2026-10-14T19:14:17+00:00",
+    "topic": "Read the code before you prompt: the 2-minute habit that halves agent mistakes",
+    "title": "Read the code before you prompt",
+    "format": "hook_broll",
+    "grammar": "y5_kinetic_type",
+    "duration": 40.12,
+    "qa_ok": true,
+    "video_id": "6u5bDK8-atk",
+    "out_dir": "out/2026-10-14-read-the-code-before-you-prompt",
+    "url": "https://youtube.com/shorts/6u5bDK8-atk",
+    "note": "loudness re-mixed from -17.5 to -14.3 LUFS before upload; cross-posted to TikTok @bidewio"
   }
 ]
