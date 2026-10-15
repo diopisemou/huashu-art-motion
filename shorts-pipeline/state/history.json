@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-14T06:15:59+00:00"
+      "fetched": "2026-10-15T10:09:50+00:00"
     }
   },
   {
@@ -68,11 +68,11 @@
     "url": "https://youtube.com/shorts/WetncE2MpkQ",
     "note": "first y1_kurzgesagt render had the top node colliding with the title; rebuilt once as y3_whiteboard; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 24,
+      "views": 25,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-14T06:15:59+00:00"
+      "fetched": "2026-10-15T10:09:50+00:00"
     }
   },
   {
@@ -86,7 +86,14 @@
     "video_id": "IfvP8Mjifbg",
     "out_dir": "out/2026-10-14-why-your-ai-agent-rewrites-files-it-should-not-t",
     "url": "https://youtube.com/shorts/IfvP8Mjifbg",
-    "note": "catch-up build after the session worker was down Oct 10-13 (eight scheduled runs missed); Postiz upload 502'd once and succeeded on retry; cross-posted to TikTok @bidewio"
+    "note": "catch-up build after the session worker was down Oct 10-13 (eight scheduled runs missed); Postiz upload 502'd once and succeeded on retry; cross-posted to TikTok @bidewio",
+    "stats": {
+      "views": 26,
+      "likes": 1,
+      "comments": 0,
+      "published_at": "2026-10-14T06:21:50Z",
+      "fetched": "2026-10-15T10:09:50+00:00"
+    }
   },
   {
     "date": "2026-10-14T19:14:17+00:00",
@@ -99,6 +106,26 @@
     "video_id": "6u5bDK8-atk",
     "out_dir": "out/2026-10-14-read-the-code-before-you-prompt",
     "url": "https://youtube.com/shorts/6u5bDK8-atk",
-    "note": "loudness re-mixed from -17.5 to -14.3 LUFS before upload; cross-posted to TikTok @bidewio"
+    "note": "loudness re-mixed from -17.5 to -14.3 LUFS before upload; cross-posted to TikTok @bidewio",
+    "stats": {
+      "views": 107,
+      "likes": 0,
+      "comments": 0,
+      "published_at": "2026-10-14T19:15:51Z",
+      "fetched": "2026-10-15T10:09:50+00:00"
+    }
+  },
+  {
+    "date": "2026-10-15T10:27:35+00:00",
+    "topic": "Three signs your prompt is a spec, not a wish",
+    "title": "Three signs your prompt is a spec, not a wish",
+    "format": "keynote",
+    "grammar": "t2_keynote_ui",
+    "duration": 32.32,
+    "qa_ok": true,
+    "video_id": "FgVwekyb26Y",
+    "out_dir": "out/2026-10-15-three-signs-your-prompt-is-a-spec-not-a-wish",
+    "url": "https://youtube.com/shorts/FgVwekyb26Y",
+    "note": "first build with the three-pass loudness mixer (landed at -14.0 LUFS without a manual remix); cross-posted to TikTok @bidewio"
   }
 ]
