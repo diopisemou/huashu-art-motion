@@ -49,8 +49,10 @@ def mix_audio(cfg: Config, voice: Voice, duration: float, out_dir: Path) -> Path
     out = out_dir / "mix.wav"
     inputs = ["-i", str(voice.wav)]
     # Voice chain: pad the head, pad the tail to the film length, normalise.
+    # Two-pass loudnorm: a single dynamic pass lands 2-4 LU under the target on short speech
+    # (the b-roll builds came out at -17.5..-17.9 LUFS), so measure first and apply linearly.
     chain = [f"[0:a]adelay={lead_ms}|{lead_ms},apad=whole_dur={duration:.3f},atrim=0:{duration:.3f},"
-             f"loudnorm=I=-14:TP=-1.5:LRA=11[voice]"]
+             f"{_loudnorm_filter(voice.wav)}[voice]"]
     if music_path and music_path.exists():
         gain = float(cfg.get("video.music_gain_db", -22))
         inputs += ["-stream_loop", "-1", "-i", str(music_path)]
@@ -63,7 +65,41 @@ def mix_audio(cfg: Config, voice: Voice, duration: float, out_dir: Path) -> Path
         last = "[voice]"
     run(["ffmpeg", "-y", "-v", "error", *inputs, "-filter_complex", ";".join(chain), "-map", last,
          "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", str(out)])
+    # Third pass: loudnorm keeps true peaks under -1.5 dBTP, so a peaky voice lands 1-2 LU under the target.
+    # Lift the remainder through a brick-wall limiter so the integrated loudness reaches -14 LUFS.
+    lufs = measure_loudness(out)
+    if lufs is not None and lufs < -14.5:
+        gain = min(6.0, -14.0 - lufs)
+        lifted = out_dir / "mix_lifted.wav"
+        run(["ffmpeg", "-y", "-v", "error", "-i", str(out),
+             "-af", f"volume={gain:.2f}dB,alimiter=limit=0.84:attack=5:release=60:level=false",
+             "-ac", "2", "-ar", "48000", "-c:a", "pcm_s16le", str(lifted)])
+        lifted.replace(out)
+        log.info("mix: lifted %.1f dB through the limiter (%.1f -> %s LUFS)", gain, lufs, measure_loudness(out))
     return out
+
+
+def _loudnorm_filter(voice_wav: Path, target_i: float = -14.0, tp: float = -1.5, lra: float = 15.0) -> str:
+    # LRA 15 (not 11): speech measures 11-12 LU of range, and loudnorm only applies the linear gain when the
+    # measured range fits under the target; otherwise it silently falls back to the dynamic mode that undershoots.
+    """loudnorm filter string with measured values (second pass). Falls back to the single-pass form when the
+    measurement cannot be parsed."""
+    import subprocess
+    base = f"loudnorm=I={target_i}:TP={tp}:LRA={lra}"
+    try:
+        proc = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(voice_wav),
+                               "-af", base + ":print_format=json", "-f", "null", "-"],
+                              capture_output=True, text=True, timeout=300)
+        m = re.search(r"\{[^{}]*\"input_i\"[^{}]*\}", proc.stderr, re.S)
+        if not m:
+            return base
+        meas = json.loads(m.group(0))
+        return (base + f":measured_I={float(meas['input_i']):.2f}:measured_TP={float(meas['input_tp']):.2f}"
+                f":measured_LRA={float(meas['input_lra']):.2f}:measured_thresh={float(meas['input_thresh']):.2f}"
+                f":offset={float(meas.get('target_offset', 0)):.2f}:linear=true")
+    except Exception as e:  # never block a build on the measurement
+        log.warning("loudnorm measurement failed (%s); using single-pass", str(e)[:120])
+        return base
 
 
 def measure_loudness(path: Path) -> float | None:
