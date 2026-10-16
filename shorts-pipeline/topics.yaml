@@ -1,4 +1,8 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- Stop asking AI for the whole feature. Ask for the test first.
 - The 80/20 of code review when the author is a model
 - Name things so the next person understands, even if the next person is a model
+- 'Context windows explained in 60 seconds: why the agent forgets what you said'
+- 'Git worktrees explained in 60 seconds: run three agents on one repo without conflicts'
+- 'Idempotency explained in 60 seconds: why re-running a script must not double-charge'
+- 'Feature flags explained in 60 seconds: ship the code, hide the feature'
+- 'Project instruction files explained in 60 seconds: what belongs in CLAUDE.md'
