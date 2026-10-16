@@ -98,10 +98,20 @@ def pinned_comment(cfg: Config, plan) -> str:
     return tpl.format(lead_line=(lead + "\n") if lead else "", link_line=(link_line + "\n") if link_line else "").strip()
 
 
+def _hashtags(tags: list[str]) -> str:
+    """'build in public' and 'buildinpublic' are one hashtag: dedupe after stripping, not before."""
+    seen: list[str] = []
+    for t in tags:
+        h = "".join(ch for ch in t if ch.isalnum() or ch == "_")
+        if h and h.lower() not in seen:
+            seen.append(h.lower())
+    return " ".join("#" + h for h in seen)
+
+
 def crosspost_caption(cfg: Config, plan) -> str:
     cap = int(cfg.get("crosspost.caption_max", 2000))
     tags = [t for t in (list(cfg.get("publish.tags_base", [])) + list(plan.tags)) if t]
-    hashtags = " ".join("#" + "".join(ch for ch in t if ch.isalnum() or ch == "_") for t in dict.fromkeys(tags))
+    hashtags = _hashtags(tags)
     link = money_link(cfg, plan)
     parts = [plan.title.strip(), plan.description.strip()]
     if link:
@@ -148,7 +158,7 @@ def youtube_description(cfg: Config, plan) -> str:
         parts.append(disclosure)
     tags = [t for t in (list(cfg.get("publish.tags_base", [])) + list(plan.tags)) if t]
     if tags:
-        parts.append(" ".join("#" + "".join(ch for ch in t if ch.isalnum() or ch == "_") for t in dict.fromkeys(tags)))
+        parts.append(_hashtags(tags))
     return "\n\n".join(parts)
 
 
