@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-16T10:11:29+00:00"
+      "fetched": "2026-10-16T19:09:06+00:00"
     }
   },
   {
@@ -72,7 +72,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-16T10:11:29+00:00"
+      "fetched": "2026-10-16T19:09:06+00:00"
     }
   },
   {
@@ -92,7 +92,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T06:21:50Z",
-      "fetched": "2026-10-16T10:11:29+00:00"
+      "fetched": "2026-10-16T19:09:06+00:00"
     }
   },
   {
@@ -108,11 +108,11 @@
     "url": "https://youtube.com/shorts/6u5bDK8-atk",
     "note": "loudness re-mixed from -17.5 to -14.3 LUFS before upload; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 113,
+      "views": 115,
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T19:15:51Z",
-      "fetched": "2026-10-16T10:11:29+00:00"
+      "fetched": "2026-10-16T19:09:06+00:00"
     }
   },
   {
@@ -128,11 +128,11 @@
     "url": "https://youtube.com/shorts/FgVwekyb26Y",
     "note": "first build with the three-pass loudness mixer (landed at -14.0 LUFS without a manual remix); cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 42,
+      "views": 53,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-15T10:28:13Z",
-      "fetched": "2026-10-16T10:11:29+00:00"
+      "fetched": "2026-10-16T19:09:06+00:00"
     }
   },
   {
@@ -146,7 +146,14 @@
     "video_id": "2NZVKh1WAp0",
     "out_dir": "out/2026-10-16-ship-the-boring-version-first",
     "url": "https://youtube.com/shorts/2NZVKh1WAp0",
-    "note": "built by the 06:07 Routine (fired 10:08Z after the session was idle; the Oct 15 afternoon slot was missed and not backfilled); three-pass mixer lifted 1.6 dB to -14.0 LUFS; cross-posted to TikTok @bidewio"
+    "note": "built by the 06:07 Routine (fired 10:08Z after the session was idle; the Oct 15 afternoon slot was missed and not backfilled); three-pass mixer lifted 1.6 dB to -14.0 LUFS; cross-posted to TikTok @bidewio",
+    "stats": {
+      "views": 35,
+      "likes": 1,
+      "comments": 0,
+      "published_at": "2026-10-16T10:19:29Z",
+      "fetched": "2026-10-16T19:09:06+00:00"
+    }
   },
   {
     "date": "2026-10-16T19:13:43+00:00",
