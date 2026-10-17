@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- Name things so the next person understands, even if the next person is a model
 - 'Context windows explained in 60 seconds: why the agent forgets what you said'
 - 'Git worktrees explained in 60 seconds: run three agents on one repo without conflicts'
 - 'Idempotency explained in 60 seconds: why re-running a script must not double-charge'
