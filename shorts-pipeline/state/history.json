@@ -206,6 +206,6 @@
     "video_id": "5U3lWL3DLNY",
     "out_dir": "out/2026-10-17-naming-code-for-ai-agents-explained-in-60-second",
     "url": "https://youtube.com/shorts/5U3lWL3DLNY",
-    "note": "built by the 15:07 Routine (fired on time); preview showed the draw label touching the right edge, shortened before the build; three-pass mixer lifted 2.1 dB to -14.1 LUFS; cross-posted to TikTok @bidewio"
+    "note": "built by the 15:07 Routine (fired on time); preview showed the draw label touching the right edge, shortened before the build; three-pass mixer lifted 2.1 dB to -14.1 LUFS; TikTok cross-post FAILED twice (Postiz: 'The access token is invalid or not found in the request'; the morning post at 10:21Z had worked) - TikTok account needs reconnecting in Postiz, then re-run `uv run shorts crosspost out/2026-10-17-naming-code-for-ai-agents-explained-in-60-second`"
   }
 ]
