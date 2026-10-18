@@ -99,7 +99,10 @@ return {
   draw(c0, t, ctx) {
     const { W, H, u } = ctx;
     const c = ctx.alpha ? (BUF = BUF || document.createElement('canvas'), BUF.width = W, BUF.height = H, BUF.getContext('2d')) : c0;
-    if (!ctx.alpha) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); }
+    if (!ctx.alpha) { c.fillStyle = '#000'; c.fillRect(0, 0, W, H); gridDots(c, t, '#ffffff', 0.09, u, W, H); }
+    // 微动：整幅内容手持感微漂（≈4px）＋极小的呼吸旋转，黑底上的字永远不会定成死帧（动态导演基线：没有 >0.5s 的静帧）
+    const [ddx, ddy] = CAM.drift(t, 6 * u, 5);
+    c.save(); c.translate(W / 2 + ddx, H / 2 + ddy); c.rotate(0.002 * Math.sin(t * 0.7)); c.translate(-W / 2, -H / 2);
     // ---- 标题（同一时间只有一个，换标题 = 旧的上移淡出、新的 Write） ----
     L.titles.forEach((z, i) => {
       const q = z.q, nx = L.titles[i + 1], out = nx ? MO.smooth(MO.seg(t, nx.q.at - 0.45, nx.q.at)) : 0; if (out >= 1 || ctx.lt(t, q.at) <= 0) return;
@@ -181,9 +184,13 @@ return {
     });
     const he = [...hl].reverse().find(z => target(z) === -2 && t >= z.at);
     if (he && eqBox && !hl.some(z => t >= z.at && z.at > he.at)) box(c, eqBox.x, eqBox.y, eqBox.w, eqBox.h, ctx.lt(t, he.at), u);
+    c.restore();
     if (ctx.alpha) { c0.save(); c0.shadowColor = 'rgba(0,0,0,0.9)'; c0.shadowBlur = 10 * u; c0.drawImage(BUF, 0, 0); c0.shadowBlur = 3 * u; c0.drawImage(BUF, 0, 0); c0.restore(); }
   },
 };
+// 极淡的点阵慢漂（manim 坐标平面的感觉）：让静止的画面也有连续的像素变化
+function gridDots(c, t, col, a, u, W, H) { const g = 80 * u, ox = (t * 20 * u) % g, oy = (t * 12 * u) % g; c.save(); c.globalAlpha = a; c.fillStyle = col;
+  for (let y = -g; y < H + g; y += g) for (let x = -g; x < W + g; x += g) { c.beginPath(); c.arc(x + ox, y + oy, 3 * u, 0, Math.PI * 2); c.fill(); } c.restore(); }
 // 曲线标签：放在曲线末端上方
 function label(c, l, a, colr, u) { if (!l.q.text || a <= 0) return; const e = l.scr[l.scr.length - 1];
   c.save(); c.globalAlpha *= a; c.font = `${40 * u}px "PuHui-Medium"`; c.fillStyle = colr; c.textAlign = 'right'; c.fillText(l.q.text, e[0], e[1] - 30 * u); c.restore(); }

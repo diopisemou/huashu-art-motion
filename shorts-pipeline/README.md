@@ -93,7 +93,9 @@ uv run shorts run                       # next topic from topics.yaml → video 
 uv run shorts run --format hook_broll   # force a format (list, hook_broll, explainer, keynote, data)
 uv run shorts stats                     # pull view counts, link them to built shorts by title, score the formats
 uv run shorts next                      # no API key: prints format, topic, rules and schema; write plan.json, then
+uv run shorts lint --plan plan.json     # writing rules: echoing labels, title/description limits, unsourced numbers (errors block the build)
 uv run shorts build --plan plan.json --record   # voice + render + QA + publish.txt, records history, consumes the topic
+uv run shorts audit                     # weekly: best/worst by relative score, per-format and per-grammar medians, three changes -> state/audit.md
 uv run shorts run --publish             # upload too, when QA passes (optional; the default flow is manual publishing)
 uv run shorts run --topic "Why your agent rewrites files it should not touch" --publish
 uv run shorts run --plan fixtures/plan_example.json      # no Claude call; good for testing the renderer
@@ -150,23 +152,28 @@ key is present the voice is transcribed with Scribe and compared with the script
 huashu's own `qa.py` runs on the spec too (determinism, motion, text in the caption band) and its numbers land in the
 report; those are advisory.
 
+Two more checks come from the motion-director bar: **freeze detection** (ffmpeg `freezedetect`, stills of 0.5 s or longer;
+a still over `qa.max_longest_still_s` fails, a frozen share over `qa.warn_frozen_pct` warns) and **narration pace**
+(words / voice seconds; above `qa.max_pace_wpm` warns, the target is 125-150 wpm). The whiteboard, 3Blue1Brown and
+kinetic-type grammars carry micro-motion (camera drift, a faint drifting dot grid, a resting pen) so they sit near zero
+frozen time. Before any of that, `shorts lint` checks the plan: on-screen text that repeats its narration, titles over 60
+characters, a first description sentence over 125 characters, the word budget, and any number without a `facts` source.
+Scores in `shorts stats` are median-relative (views / channel median over videos 2-180 days old, times a retention
+factor when the Analytics scope is present), so one viral Short does not drown the rest.
+
 ## Project layout
 
 ```
 shorts/cli.py       commands and the pipeline (build, publish, run_day, doctor)
 shorts/plan.py      ShortPlan schema + Claude prompts (structured output)
-shorts/formats.py   the five formats, the b-roll style list, the weighted daily chooser
-shorts/broll.py     hook + b-roll assembly (cards, gallery scenes, concat) and the end card every format uses
-shorts/stats.py     YouTube views + Analytics retention → history → per-format scores
-shorts/crosspost.py Postiz cross-posting (TikTok, Instagram, Facebook, Threads, LinkedIn)
 shorts/tts.py       ElevenLabs / edge-tts with word timings
 shorts/specgen.py   plan + word times → huashu clip spec
-shorts/captions.py  ASS word-by-word captions + big beat captions
+shorts/captions.py  ASS word-by-word captions
 shorts/render.py    huashu render, audio mix (loudnorm, ducking), final encode, contact sheet
 shorts/qa.py        checks, STT comparison, huashu qa
-shorts/youtube.py   OAuth (browser or device code) + resumable upload
+shorts/youtube.py   OAuth + resumable upload
 shorts/state.py     history.json + topics.yaml
-fixtures/           example plans (list, hook_broll) to test without any API key
+fixtures/           an example plan to test without any API key
 ```
 
 ## Conventions (from LEARNINGS.md)

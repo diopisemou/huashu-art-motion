@@ -183,9 +183,12 @@ return {
     }
   },
   draw(c, t, ctx) {
-    const { W, H, u } = ctx, cam = CAM.at(keys, t);
+    const { W, H, u } = ctx, cam0 = CAM.at(keys, t);
+    // 微动：相机手持感微漂（≈4px）＋极小的呼吸旋转；板子上永远有东西在动，不会出现一整秒的死帧（动态导演基线：没有 >0.5s 的静帧）
+    const [ddx, ddy] = CAM.drift(t, 6 * u, 3);
+    const cam = { ...cam0, x: cam0.x + ddx / (cam0.z || 1), y: cam0.y + ddy / (cam0.z || 1), r: (cam0.r || 0) + 0.0025 * Math.sin(t * 0.6) };
     const g = ctx.alpha ? (() => { const b = UI.scratch('clip_y3buf', W, H), x = b.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W, H); return x; })() : c;
-    if (!ctx.alpha) { c.fillStyle = BOARD; c.fillRect(0, 0, W, H); }
+    if (!ctx.alpha) { c.fillStyle = BOARD; c.fillRect(0, 0, W, H); gridDots(c, t, INK, 0.07, u, W, H); }
     g.save(); CAM.apply(g, cam); const { tip, col } = B.draw(g, t); g.restore();
     const pen = penAt(t, cam, tip, ctx);
     if (pen) DG.pen(g, pen[0], pen[1], col || B.penColor(t), Math.sin(t * 7) * 0.03);
@@ -198,9 +201,24 @@ function penAt(t, cam, tip, ctx) {
   const hs = B.S.filter(s => s.kind !== 'pop' && s.kind !== 'fill' && (s.kind !== 'custom' || s.handed !== false));
   let prev = null, next = null; for (const s of hs) { if (s.t1 <= t) prev = s; else if (s.t0 > t && !next) next = s; }
   if (prev && next && next.t0 - prev.t1 <= 0.6) return B.penAt(t, cam, null);
+  const { u } = ctx;
   const end = s => B.penAt(s.t1, cam, null);                       // 上一笔终点（屏幕）
-  if (next && next.t0 - t <= 0.3) { const b = CAM.toScreen(cam, ...(next.kind === 'custom' ? next.start() : next.kind === 'line' ? next.pts[0] : [next.x, next.y - next.size * 0.3])), q = MO.cubicOut(1 - (next.t0 - t) / 0.3); return [lerp(OFF[0], b[0], q), lerp(OFF[1], b[1], q)]; }
-  if (prev && t - prev.t1 < 0.35) { const a = end(prev), q = MO.cubicIn((t - prev.t1) / 0.35); return [lerp(a[0], OFF[0], q), lerp(a[1], OFF[1], q)]; }
-  return null;
+  const startOf = s => CAM.toScreen(cam, ...(s.kind === 'custom' ? s.start() : s.kind === 'line' ? s.pts[0] : [s.x, s.y - s.size * 0.3]));
+  if (!next) {                                                       // 最后一笔画完：0.35s 退场，不留在字上
+    if (prev && t - prev.t1 < 0.35) { const a = end(prev), q = MO.cubicIn((t - prev.t1) / 0.35); return [lerp(a[0], OFF[0], q), lerp(a[1], OFF[1], q)]; }
+    return null;
+  }
+  if (!prev) {                                                       // 第一笔之前：0.3s 从右下进来
+    if (next.t0 - t <= 0.3) { const b = startOf(next), q = MO.cubicOut(1 - (next.t0 - t) / 0.3); return [lerp(OFF[0], b[0], q), lerp(OFF[1], b[1], q)]; }
+    return null;
+  }
+  // 两笔之间空档长：笔不退场，停在上一笔右下方「歇着」并轻轻呼吸（手不会定住），下一笔前 0.3s 滑过去
+  const a = end(prev), rest = [a[0] + 46 * u + 6 * u * Math.sin(t * 2.1), a[1] + 40 * u + 5 * u * Math.sin(t * 1.7 + 1)];
+  if (next.t0 - t <= 0.3) { const b = startOf(next), q = MO.cubicOut(1 - (next.t0 - t) / 0.3); return [lerp(rest[0], b[0], q), lerp(rest[1], b[1], q)]; }
+  if (t - prev.t1 < 0.35) { const q = MO.cubicOut((t - prev.t1) / 0.35); return [lerp(a[0], rest[0], q), lerp(a[1], rest[1], q)]; }
+  return rest;
 }
+// 极淡的点阵慢漂（白板纸纹）：让静止的画面也有连续的像素变化
+function gridDots(c, t, col, a, u, W, H) { const g = 64 * u, ox = (t * 24 * u) % g, oy = (t * 14 * u) % g; c.save(); c.globalAlpha = a; c.fillStyle = col;
+  for (let y = -g; y < H + g; y += g) for (let x = -g; x < W + g; x += g) { c.beginPath(); c.arc(x + ox, y + oy, 3.5 * u, 0, Math.PI * 2); c.fill(); } c.restore(); }
 })();

@@ -34,7 +34,17 @@ return {
     }
     // 每层的节点位置（横竖屏同一套角度：≤3 上半圈左→右，≥4 从左边起顺时针一整圈）
     const lab = 46 * u + 70 * u + 45 * u;                               // 节点半径＋标签偏移＋半个标签高：最下面的标签也要在 y1 之内
-    const rx = ctx.portrait ? W * 0.34 : Math.min(W * 0.32, 640 * u), ryHalf = Math.min(y1 - y0, H) * (ctx.portrait ? 0.3 : 0.42), ryRing = Math.min((y1 - y0) * (ctx.portrait ? 0.34 : 0.36), y1 - cy - lab, cy - y0 - 60 * u);
+    const rx = ctx.portrait ? W * 0.34 : Math.min(W * 0.32, 640 * u);
+    let ryHalf = Math.min(y1 - y0, H) * (ctx.portrait ? 0.3 : 0.42), ryRing = Math.min((y1 - y0) * (ctx.portrait ? 0.34 : 0.36), y1 - cy - lab, cy - y0 - 60 * u);
+    // 竖屏：上半圈的标签画在节点上方，必须落在标题（可能两行）之下，不然顶上那个节点的标签压在标题上
+    const qt0 = ctx.of('title')[0];
+    if (ctx.portrait && qt0) { const g0 = document.createElement('canvas').getContext('2d'), tf = TY.fit(g0, qt0.text || '', W * 0.88, 84 * u, 'PuHui-Heavy', { maxLines: 2, balance: true });
+      const titleBottom = safe.top + 200 * u + (tf.lines.length - 1) * tf.size * 1.2 + tf.size * 0.35, labUp = 46 * u + 70 * u + 35 * u + 24 * u;
+      // 相机慢推 2%/s 会把顶上的节点往上顶；标题在第一次 highlight/enter 时才淡出，所以按那一刻的推进倍数算（屏幕 y = H/2 + (y − H/2)·z）
+      const nx0 = ctx.of('highlight', 'enter')[0], zMax = 1 + (ctx.portrait ? 0.006 : 0.02) * (nx0 ? nx0.at : ctx.dur);
+      const ryMax = (cy - labUp - H / 2) + (H / 2 - titleBottom) / zMax;   // 标签偏移也随 z 放大，所以 labUp 放在括号外
+      ryHalf = Math.max(120 * u, Math.min(ryHalf, ryMax)); ryRing = Math.max(120 * u, Math.min(ryRing, ryMax)); }
+    const PUSH = ctx.portrait ? 0.006 : 0.02;   // 慢推速度：竖屏画窄，2%/s 会把两侧的标签推出画再夹回中心、压到底下的节点，放慢到 0.6%/s
     levels.forEach((L, li) => {
       const n = L.pts.length, ring = n >= 4;
       L.nodes = L.pts.map((q, i) => { const ang = ring ? Math.PI + i / n * Math.PI * 2 : Math.PI + (i + 0.5) / n * Math.PI;
@@ -45,11 +55,11 @@ return {
       const t0 = L.start, keys = [{ t: t0, x: W / 2, y: H / 2, z: 1 }];
       for (const h of L.hls) {
         const nd = h.data && h.data.index != null ? L.nodes[h.data.index] : L.nodes.filter(z => z.q.at <= h.at).pop(); if (!nd) continue;
-        const last = keys[keys.length - 1], z0 = last.z * (1 + 0.02 * Math.max(0, h.at - last.t)), Z = (1 + 0.02 * (h.at - t0)) * (ctx.portrait ? 1.35 : 1.45);   // 推近倍数按本层起点算，连续两次 highlight 不叠乘
+        const last = keys[keys.length - 1], z0 = last.z * (1 + PUSH * Math.max(0, h.at - last.t)), Z = (1 + PUSH * (h.at - t0)) * (ctx.portrait ? 1.35 : 1.45);   // 推近倍数按本层起点算，连续两次 highlight 不叠乘
         const tx = lerp(nd.x, cx, 0.35), ty = lerp(nd.y, cy, 0.35);
         keys.push({ t: h.at, x: last.x, y: last.y, z: last.z > 1.2 ? last.z : z0, ease: MO.linear }); keys.push({ t: h.at + 1.2, x: tx, y: ty, z: Z, ease: MO.sineInOut }); h.node = nd;
       }
-      const last = keys[keys.length - 1], tEnd = L.exit ? L.exit.at : ctx.dur; keys.push({ t: Math.max(last.t + 0.01, tEnd), x: last.x, y: last.y, z: last.z * (1 + 0.02 * Math.max(0, tEnd - last.t)), ease: MO.linear });
+      const last = keys[keys.length - 1], tEnd = L.exit ? L.exit.at : ctx.dur; keys.push({ t: Math.max(last.t + 0.01, tEnd), x: last.x, y: last.y, z: last.z * (1 + PUSH * Math.max(0, tEnd - last.t)), ease: MO.linear });
       L.keys = keys;
     });
   },

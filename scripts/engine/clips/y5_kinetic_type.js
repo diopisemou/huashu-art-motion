@@ -69,7 +69,9 @@ function drawPage(c, P, t, ctx) {
   const blockH = lines.length * lh + (sub ? subSz * (0.6 + subL.length * 1.15) : 0), y0 = cyB - blockH / 2 + size * 0.82;
   // 标签（左上）
   const label = q.data && q.data.label;
-  if (label) TY.rise(c, label, (ctx.portrait ? 80 : 140) * u, ctx.safe.top + (ctx.portrait ? 260 : 210) * u, MO.at(lt, 0, 0.3), { size: (ctx.portrait ? 56 : 52) * u, fam: 'PuHui-Bold', color: fg, track: 6 * u, ...(ctx.alpha ? { stroke: '#111', strokeW: 6 * u } : {}) });
+  // 标签贴在主词块上方（主词块随字号/行数上下浮动，固定 y 会擦到 ≤13 字的大标题第一字）
+  const labelY = Math.max(ctx.safe.top + 80 * u, Math.min(ctx.safe.top + (ctx.portrait ? 260 : 210) * u, y0 - size * 0.95 - 36 * u));
+  if (label) TY.rise(c, label, (ctx.portrait ? 80 : 140) * u, labelY, MO.at(lt, 0, 0.3), { size: (ctx.portrait ? 56 : 52) * u, fam: 'PuHui-Bold', color: fg, track: 6 * u, ...(ctx.alpha ? { stroke: '#111', strokeW: 6 * u } : {}) });
   // 高亮（画在字后面）
   const hq = ctx.of('highlight').filter(h => h.at >= (P.num ? P.show : q.at) - 1e-6).find(h => { const nx = ctx.of('title', 'point', 'number').find(z => z.at > q.at); return !nx || h.at < nx.at; });
   let hiScale = 1, knock = null;
