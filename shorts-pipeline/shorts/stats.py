@@ -95,32 +95,50 @@ def link_and_score(cfg: Config, uploads: list[dict]) -> dict:
         if a and h.get("stats"):
             h["stats"].update({"avg_view_pct": a.get("averageViewPercentage"), "avg_view_s": a.get("averageViewDuration"),
                                "shares": a.get("shares"), "subs_gained": a.get("subscribersGained")}); changed = True
-    if changed:
-        write_json(history_path(cfg), hist)
-    scores = score_formats(hist)
+    scores = score_formats(hist)          # also writes stats.rel per video
+    write_json(history_path(cfg), hist)
     write_json(cfg.state_dir / "stats.json", {"updated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "scores": scores})
     return scores
 
 
-def score_formats(hist: list[dict], days: int = 45) -> dict[str, float]:
-    """Mean views per format over recent published videos, lightly age-normalised (views per day online, capped)."""
+def _median(xs: list[float]) -> float:
+    xs = sorted(xs)
+    n = len(xs)
+    return xs[n // 2] if n % 2 else xs[n // 2]          # even count: the upper of the two middle values (outlier method)
+
+
+def score_formats(hist: list[dict], days: int = 180, min_age_days: float = 2.0) -> dict[str, float]:
+    """Median-relative scoring. Each published video scores views / channel-median views over the window
+    (1.0 = a typical video for this channel, 3.0 = an outlier), multiplied by (0.5 + retention) when the
+    Analytics scope has given an average view percentage. Videos younger than `min_age_days` are still growing and
+    are left out of the median and the format score. The per-video score is stored as stats.rel for `shorts audit`.
+    Format score = mean of its videos' relative scores."""
     now = dt.datetime.now(dt.timezone.utc)
-    per: dict[str, list[float]] = {}
+    rows: list[tuple[dict, float]] = []
     for h in hist:
         s, f = h.get("stats"), h.get("format")
-        if not s or not f:
+        if not s or not f or not s.get("published_at"):
             continue
         pub = dt.datetime.fromisoformat(s["published_at"].replace("Z", "+00:00"))
-        age = max(1.0, (now - pub).total_seconds() / 86400)
-        if age > days:
+        age = (now - pub).total_seconds() / 86400
+        if age < min_age_days or age > days:
+            s.pop("rel", None)
             continue
-        pace = s["views"] / min(age, 7.0)                          # a video keeps earning for ~a week; after that, per-week pace
-        # retention and subscribers are what the Shorts feed and the Partner Program reward: weight them in when known
+        rows.append((h, float(s.get("views", 0))))
+    if not rows:
+        return {}
+    med = max(1.0, _median([v for _, v in rows]))
+    per: dict[str, list[float]] = {}
+    for h, views in rows:
+        s = h["stats"]
+        rel = views / med
         pct = s.get("avg_view_pct")
-        score = pace * (0.5 + float(pct) / 100.0) if pct is not None else pace
-        score += 25.0 * float(s.get("subs_gained") or 0)
-        per.setdefault(f, []).append(score)
-    return {f: round(sum(v) / len(v), 1) for f, v in per.items() if v}
+        if pct is not None:
+            rel *= 0.5 + float(pct) / 100.0
+        rel += 0.1 * float(s.get("subs_gained") or 0)
+        s["rel"] = round(rel, 2)
+        per.setdefault(h["format"], []).append(rel)
+    return {f: round(sum(v) / len(v), 2) for f, v in per.items() if v}
 
 
 def load_scores(cfg: Config) -> dict[str, float]:

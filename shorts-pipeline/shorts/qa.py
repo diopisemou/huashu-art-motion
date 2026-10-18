@@ -36,6 +36,27 @@ def stt_check(wav: Path, script: str) -> dict | None:
     return {"transcript": text, "similarity": round(ratio, 3), "ok": ratio >= 0.85}
 
 
+def freeze_metrics(final: Path, min_still_s: float = 0.5, noise: float = 0.001) -> dict:
+    """Stills: runs of near-identical frames (ffmpeg freezedetect at its default -60 dB noise floor). The motion-director
+    bar is no still over 0.5 s and at most 1 s frozen per 30 s; before micro-motion the explainer grammars sat at 50-80 % frozen."""
+    import subprocess
+    proc = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(final), "-vf", f"freezedetect=n={noise}:d={min_still_s}",
+                           "-an", "-f", "null", "-"], capture_output=True, text=True)
+    durs = [float(x) for x in re.findall(r"freeze_duration:\s*([0-9.]+)", proc.stderr)]
+    starts = [float(x) for x in re.findall(r"freeze_start:\s*([0-9.]+)", proc.stderr)]
+    return {"stills": len(durs), "frozen_s": round(sum(durs), 2), "longest_s": round(max(durs), 2) if durs else 0.0,
+            "longest_at": round(starts[durs.index(max(durs))], 2) if durs and len(starts) == len(durs) else None}
+
+
+def pace_wpm(narration: str, voice_wav: Path) -> float | None:
+    try:
+        info = ffprobe(voice_wav)
+        sec = float(info["format"]["duration"])
+        return round(len(_words(narration)) / sec * 60, 0) if sec > 0 else None
+    except Exception:
+        return None
+
+
 def huashu_qa(cfg: Config, spec_path: Path, out_dir: Path) -> dict | None:
     qa_py = cfg.huashu_dir() / "scripts" / "qa.py"
     qa_dir = out_dir / "qa"
@@ -73,8 +94,19 @@ def run_qa(cfg: Config, final: Path, spec_path: Path, voice_wav: Path, narration
     if abs(fps - cfg.fps) > 0.5:
         problems.append(f"fps {fps:.2f} != {cfg.fps}")
 
+    warnings: list[str] = []
+    fz = freeze_metrics(final)
+    fz["frozen_pct"] = round(100.0 * fz["frozen_s"] / dur, 1) if dur else 0.0
+    max_still = float(cfg.get("qa.max_longest_still_s", 3.0))
+    if fz["longest_s"] > max_still:
+        problems.append(f"a still of {fz['longest_s']}s at {fz['longest_at']}s (limit {max_still}s): nothing may freeze that long")
+    if fz["frozen_pct"] > float(cfg.get("qa.warn_frozen_pct", 20)):
+        warnings.append(f"frozen {fz['frozen_pct']}% of the film ({fz['stills']} stills >= 0.5s); add motion or cues")
+    pace = pace_wpm(narration, voice_wav)
+    if pace and pace > float(cfg.get("qa.max_pace_wpm", 165)):
+        warnings.append(f"narration pace {pace:.0f} wpm (target {cfg.get('qa.target_pace_wpm', '125-150')}); fewer words or a slower voice")
     report = {"duration": round(dur, 2), "width": w, "height": h, "fps": round(fps, 2), "lufs": lufs,
-              "audio": bool(a), "problems": problems}
+              "audio": bool(a), "freeze": fz, "pace_wpm": pace, "problems": problems, "warnings": warnings}
 
     if not skip_huashu:
         hq = huashu_qa(cfg, spec_path, out_dir)
@@ -89,6 +121,8 @@ def run_qa(cfg: Config, final: Path, spec_path: Path, voice_wav: Path, narration
     report["ok"] = not problems
     write_json(out_dir / "qa_report.json", report)
     _write_md(report, out_dir / "qa_report.md")
+    for w_ in warnings:
+        log.warning("qa warning: %s", w_)
     (log.info if report["ok"] else log.warning)("qa: %s", "OK" if report["ok"] else "; ".join(problems))
     return report
 
@@ -116,11 +150,17 @@ def _write_md(r: dict, path: Path) -> None:
     lines = [f"# QA: {'OK' if r['ok'] else 'PROBLEMS'}", "",
              f"- duration: {r['duration']} s", f"- size: {r['width']}x{r['height']} @ {r['fps']} fps",
              f"- loudness: {r['lufs']} LUFS", f"- audio: {r['audio']}"]
+    if r.get("freeze"):
+        f = r["freeze"]; lines += [f"- stills >= 0.5 s: {f['stills']} ({f['frozen_s']} s frozen, {f.get('frozen_pct', 0)}%, longest {f['longest_s']} s)"]
+    if r.get("pace_wpm"):
+        lines += [f"- narration pace: {r['pace_wpm']:.0f} wpm"]
     if r.get("stt"):
         lines += [f"- voice vs script similarity: {r['stt']['similarity']}"]
     if r.get("huashu_qa"):
         lines += ["- huashu qa: " + ", ".join(f"{k}={v}" for k, v in r["huashu_qa"].items())]
     if r["problems"]:
         lines += ["", "## Problems"] + [f"- {p}" for p in r["problems"]]
+    if r.get("warnings"):
+        lines += ["", "## Warnings"] + [f"- {w}" for w in r["warnings"]]
     lines += ["", "Look at sheet.jpg before publishing."]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
