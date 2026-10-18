@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Git worktrees explained in 60 seconds: run three agents on one repo without conflicts'
 - 'Idempotency explained in 60 seconds: why re-running a script must not double-charge'
 - 'Feature flags explained in 60 seconds: ship the code, hide the feature'
 - 'Project instruction files explained in 60 seconds: what belongs in CLAUDE.md'

@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -72,7 +72,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -92,7 +92,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T06:21:50Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -112,7 +112,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T19:15:51Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -132,7 +132,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-15T10:28:13Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -152,7 +152,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-16T10:19:29Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -168,11 +168,11 @@
     "url": "https://youtube.com/shorts/oMNEjNsmess",
     "note": "built by the 15:07 Routine; y1_kurzgesagt preview showed node 2 colliding with the title again, so the first t1_3b1b build was used instead; three-pass mixer lifted 1.7 dB to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 520,
-      "likes": 5,
+      "views": 634,
+      "likes": 6,
       "comments": 0,
       "published_at": "2026-10-16T19:14:33Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -188,11 +188,11 @@
     "url": "https://youtube.com/shorts/me61WlvReJI",
     "note": "built by the 06:07 Routine (fired on time); three-pass mixer lifted 0.9 dB to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 169,
+      "views": 181,
       "likes": 3,
       "comments": 0,
       "published_at": "2026-10-17T10:18:48Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -208,11 +208,11 @@
     "url": "https://youtube.com/shorts/5U3lWL3DLNY",
     "note": "built by the 15:07 Routine (fired on time); preview showed the draw label touching the right edge, shortened before the build; three-pass mixer lifted 2.1 dB to -14.1 LUFS; TikTok cross-post failed twice that evening (Postiz: access token invalid), succeeded on a retry the next morning at 10:10Z; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 53,
+      "views": 98,
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-17T19:14:43Z",
-      "fetched": "2026-10-18T10:09:06+00:00"
+      "fetched": "2026-10-18T19:09:03+00:00"
     }
   },
   {
@@ -226,6 +226,26 @@
     "video_id": "5nCsxvUV2L0",
     "out_dir": "out/2026-10-18-context-windows-explained-in-60-seconds",
     "url": "https://youtube.com/shorts/5nCsxvUV2L0",
-    "note": "built by the 06:07 Routine (fired on time); three-pass mixer lifted 1.8 dB to -14.0 LUFS; known cosmetic: y5 step label grazes the first letter on pages 03/04; cross-posted to TikTok @bidewio"
+    "note": "built by the 06:07 Routine (fired on time); three-pass mixer lifted 1.8 dB to -14.0 LUFS; known cosmetic: y5 step label grazes the first letter on pages 03/04; cross-posted to TikTok @bidewio",
+    "stats": {
+      "views": 49,
+      "likes": 0,
+      "comments": 0,
+      "published_at": "2026-10-18T10:14:58Z",
+      "fetched": "2026-10-18T19:09:03+00:00"
+    }
+  },
+  {
+    "date": "2026-10-18T19:19:05+00:00",
+    "topic": "Git worktrees explained in 60 seconds: run three agents on one repo without conflicts",
+    "title": "Git worktrees explained in 60 seconds",
+    "format": "hook_broll",
+    "grammar": "y5_kinetic_type",
+    "duration": 32.69,
+    "qa_ok": true,
+    "video_id": "M0rGUpVVHyE",
+    "out_dir": "out/2026-10-18-git-worktrees-explained-in-60-seconds",
+    "url": "https://youtube.com/shorts/M0rGUpVVHyE",
+    "note": "built by the 15:07 Routine (fired on time); styles cubism/roman mosaic/kirby/monet, all first use; three-pass mixer to -14.0 LUFS; cross-posted to TikTok @bidewio"
   }
 ]
