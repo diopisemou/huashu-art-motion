@@ -50,7 +50,7 @@ voice:
     voice_id: ""          # or set ELEVENLABS_VOICE_ID
     stability: 0.5
     similarity_boost: 0.75
-    speed: 1.0            # 0.7–1.2
+    speed: 0.9            # 0.7–1.2. 0.9 brings the voice from ~190 to ~150 wpm (explainers read at 125–150)
   edge:
     voice: en-US-AndrewMultilingualNeural   # `uv run edge-tts --list-voices` to browse
     rate: "+5%"
@@ -73,6 +73,7 @@ publish:
   made_for_kids: false
   publish_at: ""          # RFC3339 like 2026-10-08T14:00:00Z to schedule; leave blank to go live on upload
   notify_subscribers: true
+  max_hashtags: 5         # topical hashtags first, then tags_base to fill; no #fyp-style tags
 
 monetize:
   # Money levers that do not depend on YouTube's Partner Program. Fill the URLs and they go into every description,
@@ -109,7 +110,18 @@ formats:
 llm:
   model: claude-opus-5-5
   effort: high
-  max_words: 125          # narration budget; ~45 s at a brisk pace
+  max_words: 100          # narration budget: ~40 s at 150 wpm (the pace the explainer bar asks for)
+
+qa:
+  max_longest_still_s: 3.0   # a still longer than this fails QA (the motion bar is 0.5 s; grammars with micro-motion sit near 0)
+  warn_frozen_pct: 20        # warn when more than this share of the film is frozen (stills >= 0.5 s)
+  max_pace_wpm: 165          # warn above this; target 125–150
+  target_pace_wpm: "125-150"
+
+lint:
+  max_title_chars: 60
+  max_first_sentence_chars: 125
+  allow_numbers: ["60 seconds", "60-second", "in 60"]   # phrases whose numbers need no source
 
 topics:
   autofill: true          # when topics.yaml is empty, ask Claude for a new batch

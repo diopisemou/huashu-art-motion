@@ -27,7 +27,14 @@ def build(cfg: Config, plan, out_dir: Path, *, skip_qa: bool = False) -> dict:
     from .tts import synthesize
 
     assert isinstance(plan, ShortPlan)
+    from .lint import format_report, lint_plan
+    errors, warnings = lint_plan(plan, cfg)
+    for w_ in warnings:
+        log.warning("lint: %s", w_)
+    if errors:
+        raise SystemExit("plan lint failed; fix plan.json before paying for voice and render:\n" + format_report(errors, warnings))
     out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "lint.txt").write_text(format_report(errors, warnings) + "\n", encoding="utf-8")
     write_json(out_dir / "plan.json", plan.model_dump())
     narration = plan.narration()
     (out_dir / "narration.txt").write_text(narration + "\n", encoding="utf-8")
@@ -74,6 +81,7 @@ def build(cfg: Config, plan, out_dir: Path, *, skip_qa: bool = False) -> dict:
         "topic": plan.topic, "title": plan.title, "format": plan.format, "grammar": plan.grammar, "language": plan.language,
         "final": str(final), "sheet": str(sheet), "duration": round(media_duration(final), 2),
         "voice_provider": voice.provider, "qa_ok": bool(report.get("ok")), "qa": report,
+        "lint_warnings": warnings,
     }
     write_json(out_dir / "manifest.json", manifest)
     log.info("built %s  (%.1fs, qa %s)  look at %s", final, manifest["duration"], "OK" if manifest["qa_ok"] else "FAILED", sheet)
@@ -98,20 +106,28 @@ def pinned_comment(cfg: Config, plan) -> str:
     return tpl.format(lead_line=(lead + "\n") if lead else "", link_line=(link_line + "\n") if link_line else "").strip()
 
 
-def _hashtags(tags: list[str]) -> str:
-    """'build in public' and 'buildinpublic' are one hashtag: dedupe after stripping, not before."""
+def _hashtags(tags: list[str], limit: int | None = None) -> str:
+    """'build in public' and 'buildinpublic' are one hashtag: dedupe after stripping, not before. Capped at `limit`."""
     seen: list[str] = []
     for t in tags:
         h = "".join(ch for ch in t if ch.isalnum() or ch == "_")
         if h and h.lower() not in seen:
             seen.append(h.lower())
+    if limit:
+        seen = seen[:limit]
     return " ".join("#" + h for h in seen)
+
+
+def _hashtag_tags(cfg: Config, plan) -> list[str]:
+    """Topical tags first (the plan's own), then the channel's base tags to fill, capped by publish.max_hashtags."""
+    base = [t for t in list(cfg.get("publish.tags_base", [])) if t]
+    own = [t for t in list(plan.tags) if t and t not in base]
+    return own + base
 
 
 def crosspost_caption(cfg: Config, plan) -> str:
     cap = int(cfg.get("crosspost.caption_max", 2000))
-    tags = [t for t in (list(cfg.get("publish.tags_base", [])) + list(plan.tags)) if t]
-    hashtags = _hashtags(tags)
+    hashtags = _hashtags(_hashtag_tags(cfg, plan), int(cfg.get("publish.max_hashtags", 5)))
     link = money_link(cfg, plan)
     parts = [plan.title.strip(), plan.description.strip()]
     if link:
@@ -156,9 +172,9 @@ def youtube_description(cfg: Config, plan) -> str:
     disclosure = str(cfg.get("channel.disclosure", "") or "").strip()
     if disclosure:
         parts.append(disclosure)
-    tags = [t for t in (list(cfg.get("publish.tags_base", [])) + list(plan.tags)) if t]
+    tags = _hashtag_tags(cfg, plan)
     if tags:
-        parts.append(_hashtags(tags))
+        parts.append(_hashtags(tags, int(cfg.get("publish.max_hashtags", 5))))
     return "\n\n".join(parts)
 
 
@@ -330,6 +346,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--fill", action="store_true", help="ask Claude for a new batch")
     p.add_argument("-n", type=int)
 
+    p = sub.add_parser("lint", help="check a plan.json against the writing rules (echoing labels, limits, unsourced numbers)")
+    p.add_argument("--plan", type=Path, default=Path("plan.json"))
+
+    p = sub.add_parser("audit", help="weekly audit: best/worst shorts by relative score, per-format and per-grammar medians, three changes -> state/audit.md")
+    p.add_argument("--no-refresh", action="store_true", help="do not pull fresh YouTube stats first")
+
     sub.add_parser("doctor", help="check tools, credentials and paths")
 
     a = ap.parse_args(argv)
@@ -381,10 +403,26 @@ def main(argv: list[str] | None = None) -> int:
             topics = load_topics(cfg)
             if topics and topics[0].strip().lower() == plan.topic.strip().lower():
                 save_topics(cfg, topics[1:])
+            qa = m.get("qa") or {}
             record(cfg, {"topic": plan.topic, "title": plan.title, "format": plan.format, "grammar": plan.grammar,
                          "duration": m["duration"], "qa_ok": m["qa_ok"], "video_id": None,
-                         "out_dir": str(out_dir.relative_to(cfg.root)) if out_dir.is_relative_to(cfg.root) else str(out_dir)})
+                         "out_dir": str(out_dir.relative_to(cfg.root)) if out_dir.is_relative_to(cfg.root) else str(out_dir),
+                         "metrics": {"words": plan.word_count(), "pace_wpm": qa.get("pace_wpm"), "frozen_pct": (qa.get("freeze") or {}).get("frozen_pct"),
+                                     "longest_still_s": (qa.get("freeze") or {}).get("longest_s"), "lint_warnings": len(m.get("lint_warnings") or [])}})
         return 0 if m["qa_ok"] else 2
+    if a.cmd == "lint":
+        from .lint import format_report, lint_plan
+        from .plan import ShortPlan
+        plan = ShortPlan.model_validate(read_json(a.plan))
+        errors, warnings = lint_plan(plan, cfg)
+        print(format_report(errors, warnings))
+        return 1 if errors else 0
+    if a.cmd == "audit":
+        from .audit import write_audit
+        path, text = write_audit(cfg, refresh_stats=not a.no_refresh)
+        print(text)
+        print(f"-> {path}")
+        return 0
     if a.cmd == "next":
         import json as _json
         from .formats import BROLL_STYLES, FORMATS, choose_format
@@ -406,14 +444,20 @@ def main(argv: list[str] | None = None) -> int:
         print(f"recent titles to avoid: {'; '.join(recent_titles(cfg)) or '(none)'}")
         print(f"format scores so far: {scores or '(none yet)'}")
         print("\n# Format brief\n" + FORMATS[fmt]["brief"] + "\n" + rules)
-        print("\n# Writing rules\n- Cue 1 is a `title` cue whose narration is the hook (one sentence, no 'In this video').\n"
-              "- Each cue's `narration` is exactly what the voice says while that cue is on screen (1-2 short sentences).\n"
-              "- Concrete over abstract; no filler; honest voice; real numbers only with a source in the description.\n"
-              "- Title <= 70 chars, sentence case, no hashtags. Tags lowercase, no '#'.\n"
-              "- On-screen text must fit a phone: y5 main text 1-2 words / <= 13 chars, subs <= 7 words; other grammars <= 9 words per line.")
+        print("\n# Writing rules\n- Cue 1 is a `title` cue whose narration is the hook (one sentence, no 'In this video'). Write three hooks from different\n"
+              "  formulas (gap, mistake, number, contrast, the viewer's own question), score each 1-10 for specificity/curiosity/honesty, keep the best.\n"
+              "  The on-screen hook (text, <= 6 words) ADDS to the spoken hook; it never repeats it.\n"
+              "- Each cue's `narration` is exactly what the voice says while that cue is on screen (1-2 short sentences). Put a re-hook (a turn, a 'but') near the middle.\n"
+              "- On-screen text is a second channel (the term, the step name, the number, the consequence); it never repeats the words spoken over it.\n"
+              f"- Narration <= {cfg.get('llm.max_words', 100)} words total: it is read at 125-150 wpm, about 40 s. Fewer words beat a faster voice.\n"
+              "- Concrete over abstract; no filler; honest voice. Every real number needs a `facts` entry with a source URL, or leave the number out.\n"
+              "- Title <= 60 chars with the topic in the first three words, sentence case, no hashtags ('X explained in 60 seconds' performs best here).\n"
+              "- Description: first sentence <= 125 chars and standing alone; nothing the video does not say. Tags lowercase, no '#'; the first 3-5 are the hashtags.\n"
+              "- On-screen text must fit a phone: y5 main text 1-2 words / <= 13 chars, subs <= 7 words; other grammars <= 9 words per line.\n"
+              "- `uv run shorts lint --plan plan.json` before building: errors block, warnings are the bar.")
         print("\n# Grammar menu" + GRAMMAR_GUIDE)
         print("# JSON schema for plan.json\n" + _json.dumps(ShortPlan.model_json_schema(), ensure_ascii=False))
-        print("\n# Then\n  uv run shorts build --plan plan.json --record   # voice, render, captions, QA, publish.txt; records history and consumes the topic")
+        print("\n# Then\n  uv run shorts lint --plan plan.json\n  uv run shorts build --plan plan.json --record   # voice, render, captions, QA (freeze, pace, loudness, STT), publish.txt; records history and consumes the topic")
         return 0
     if a.cmd == "publish":
         if a.force:

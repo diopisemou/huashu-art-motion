@@ -70,6 +70,11 @@ class Cue(BaseModel):
     style: Optional[str] = Field(None, description="broll cue: art style id from the b-roll style list")
 
 
+class Fact(BaseModel):
+    claim: str = Field(..., description="the exact figure or claim as spoken or shown")
+    source: str = Field(..., description="URL or document that states it")
+
+
 class ShortPlan(BaseModel):
     topic: str
     language: str
@@ -81,6 +86,7 @@ class ShortPlan(BaseModel):
     data: PlanData = Field(default_factory=PlanData)
     cues: list[Cue] = Field(..., description="3-7 cues. The first is a `title` cue carrying the hook.")
     outro: str = Field(..., description="The closing line the voice says after the last cue (the CTA).")
+    facts: list[Fact] = Field(default_factory=list, description="One entry per real number or claim in the narration/description, with its source URL. Required when any figure appears.")
 
     def narration_parts(self) -> list[str]:
         parts = [c.narration.strip() for c in self.cues]
@@ -126,13 +132,17 @@ Language of narration and on-screen text: {language}
 Closing line (use it as `outro`, you may adapt the wording slightly): {cta}
 
 Format rules
-- Total narration (all cue narrations + outro) <= {max_words} words. Spoken at a brisk pace that is about 40-50 seconds.
+- Total narration (all cue narrations + outro) <= {max_words} words, read at 125-150 words per minute: about 40 seconds.
 - Cue 1 is a `title` cue whose narration is the hook: one sentence, states the payoff or a tension, no "In this video".
-- 3-6 more cues, each one idea, each narration 1-2 short sentences. The on-screen text is a compression of the narration, never a different idea.
+  Write three hooks from different formulas (a gap, a mistake, a number, a contrast, a question the viewer already has), score each 1-10 for
+  specificity, curiosity and honesty, keep the best; the on-screen hook (text) is <= 6 words and ADDS to the spoken hook, it never repeats it.
+- 3-6 more cues, each one idea, each narration 1-2 short sentences. On-screen text adds a second channel (the term, the number, the step name,
+  the consequence); it never repeats the words being spoken at that moment. Put a re-hook (a turn, a surprise, a "but") near the middle.
 - Concrete over abstract: a step, a rule, a number, a before/after. No filler, no "let's dive in", no emojis.
-- Numbers: use a real figure only when you are confident of it and name the source in `description`; otherwise write the idea without a number or mark the chart `badge: "illustrative"`.
+- Numbers: every real figure needs a `facts` entry ({{claim, source URL}}) and the source named in `description`; otherwise write the idea without a number or mark the chart `badge: "illustrative"`. Never invent testimonials, results, prices or people.
 - Honest voice: it is fine to say "we" and "I think"; never fabricate testimonials, earnings or results.
-- Title <= 70 characters, sentence case, no hashtags (the pipeline appends #Shorts). Tags lowercase, no '#'.
+- Title <= 60 characters, the topic in the first three words, sentence case, no hashtags (the pipeline appends #Shorts). "X explained in 60 seconds" is this channel's best-performing shape.
+- Description: the first sentence (<= 125 characters) must stand alone before "more"; 2-4 sentences, nothing the video does not say. Tags lowercase, no '#'; the first 3-5 are the topical ones used as hashtags.
 - On-screen text must fit a phone: y5 main text 1-2 words and <= 13 characters (it is set huge), subs <= 7 words; other grammars <= 9 words per line.
 - Choose the grammar that fits the idea; default to y5_kinetic_type when unsure. Only use t3_finance_chart with real, sourced numbers.
 - Avoid these recent titles/topics: {recent}
@@ -151,7 +161,9 @@ FORMAT_RULES = {
         "that tell this beat of the story or argument; pick styles whose mood matches the beat and never reuse a style; no other cue kinds. "
         "The outro is spoken over a closing card.\nB-roll styles: {styles}"
     ),
-    "explainer": "Set format='explainer' and pick y3_whiteboard, t1_3b1b or y1_kurzgesagt. 4-6 cues following that grammar's menu.",
+    "explainer": ("Set format='explainer' and pick y3_whiteboard, t1_3b1b or y1_kurzgesagt. 5-7 cues following that grammar's menu, in this order: "
+                  "hook, the familiar world (what the viewer already does), the disruption (what goes wrong), the mechanism (why), the discovery (the fix), "
+                  "the consequence (what changes), recap in one line. Labels name the mechanism or the step; narration explains it."),
     "keynote": "Set format='keynote', grammar='t2_keynote_ui'. Cues: title, three card cues with icons, one number cue.",
     "data": "Set format='data', grammar='t3_finance_chart' ONLY with a real dataset you can source in the description (data.series, data.source). If you cannot, set format='list' and write a list instead.",
 }
