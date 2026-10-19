@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Feature flags explained in 60 seconds: ship the code, hide the feature'
 - 'Project instruction files explained in 60 seconds: what belongs in CLAUDE.md'
 - 'Rate limiting explained in 60 seconds: what a 429 means and how a token bucket decides'
 - 'Webhooks explained in 60 seconds: how a server calls you back, and why you verify the signature'

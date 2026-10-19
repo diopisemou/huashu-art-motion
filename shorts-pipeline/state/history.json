@@ -281,5 +281,25 @@
     },
     "url": "https://youtube.com/shorts/LQpLz7uub-Q",
     "note": "Monday run: audit written (explainer 5.56x, '60 seconds' titles 3.57x), t1_3b1b explainer, lint clean, QA OK (0 frozen, 163 wpm, STT 0.99), published public, cross-posted to TikTok @bidewio via Postiz at 10:20Z."
+  },
+  {
+    "date": "2026-10-19T19:14:43+00:00",
+    "topic": "Feature flags explained in 60 seconds: ship the code, hide the feature",
+    "title": "Feature flags explained in 60 seconds",
+    "format": "hook_broll",
+    "grammar": "y5_kinetic_type",
+    "duration": 29.63,
+    "qa_ok": true,
+    "video_id": "clOwi0HW0Ps",
+    "out_dir": "out/2026-10-19-feature-flags-explained-in-60-seconds",
+    "metrics": {
+      "words": 85,
+      "pace_wpm": 180.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "url": "https://youtube.com/shorts/clOwi0HW0Ps",
+    "note": "built by the 15:07 Routine (fired on time); styles hopper/constructivism/bauhaus/munch, all first use; lint clean, QA OK (0 frozen, pace 180 wpm warning at 85 words, STT 1.0); published public; first TikTok cross-post got a Postiz 502, retry succeeded, PUBLISHED 19:19Z @bidewio; voice speed lowered 0.9 -> 0.85 in config for tomorrow."
   }
 ]
