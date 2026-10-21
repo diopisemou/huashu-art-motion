@@ -1,5 +1,20 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Webhooks explained in 60 seconds: how a server calls you back, and why you verify the signature'
-- 'Database migrations explained in 60 seconds: change the schema without losing a row'
-- 'Tool calling explained in 60 seconds: how a language model runs your functions'
-- 'Eventual consistency explained in 60 seconds: why the dashboard lags the database'
+# Oct 21: queue reset to the audience that actually shows up (people building with AI coding agents); each line is a claim or a mistake, not a definition.
+- "Your AI agent needs a definition of done, not a longer prompt"
+- "Stop pasting error messages: hand the agent the failing test instead"
+- "Small diffs win: one function per prompt beats one prompt for the feature"
+- "Let the agent run the tests itself, not just write them"
+- "Plan first: make the agent list its steps before it touches a file"
+- "Your agent should open a pull request, never push to main"
+- "Ask the agent to explain the bug before it fixes it"
+- "Review the diff, not the chat: what to read before accepting AI code"
+- "Why the agent loses the thread after an hour, and when to start a fresh session"
+- "Give the agent a scratch folder so it stops littering the repo"
+- "Prompt with one example from your own code, not with adjectives"
+- "One agent, one task: why 'also fix the styling' breaks the run"
+- "Commit before every agent run: the rollback habit that saves afternoons"
+- "Logs are the agent's eyes: a print statement beats a guess"
+- "Type hints make agents smarter: the cheapest guardrail in your codebase"
+- "Why agents write tests that always pass, and the question that catches it"
+- "Pin the dependency versions before you let an agent install anything"
+- "Name the files you want touched: the prompt line that stops collateral edits"

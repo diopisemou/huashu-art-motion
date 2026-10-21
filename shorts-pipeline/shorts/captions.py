@@ -72,6 +72,8 @@ def build_ass(cfg: Config, words: list[Word], offset: float, total: float, out_p
 
     big_size = int(cfg.get("captions.big_size", 112))
     big_margin = int(cfg.get("video.safe_top", 200)) + 140
+    hook_size = int(cfg.get("captions.hook_size", int(big_size * 1.3)))
+    hook_margin = int(cfg.get("video.safe_top", 200)) + int(cfg.get("captions.hook_offset", 380))   # upper third, clear of the phone UI
     header = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {W}
@@ -83,6 +85,7 @@ ScaledBorderAndShadow: yes
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Cap,{font},{size},{primary},{primary},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,{outline},0,2,60,60,{margin_v},1
 Style: Big,{font},{big_size},{primary},{primary},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,{outline + 2},0,8,90,90,{big_margin},1
+Style: Hook,{font},{hook_size},{primary},{primary},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,{outline + 3},0,8,70,70,{hook_margin},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -101,9 +104,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 t = _clean(ww.text, upper)
                 parts.append(f"{{\\c{active}}}{t}{{\\c{primary}}}" if k == wi else t)
             lines.append(f"Dialogue: 0,{_ts(start)},{_ts(end)},Cap,,0,0,0,,{' '.join(parts)}")
-    for text, start, end in (overlays or []):
+    for ov in (overlays or []):
+        text, start, end = ov[0], ov[1], ov[2]
+        kind = ov[3] if len(ov) > 3 else "big"
         if end - start < 0.3 or not text.strip():
             continue
-        lines.append(f"Dialogue: 1,{_ts(start)},{_ts(end)},Big,,0,0,0,,{{\\fad(160,160)}}{_clean(text, upper)}")
+        if kind == "hook":
+            # cold open: the hook slams in at frame 0 (140 % -> 100 % in 220 ms) over the moving scene; an optional sub line sits under it
+            main, _, sub = text.partition("\n")
+            body = _clean(main, upper) + (f"\\N{{\\fs{int(hook_size * 0.48)}}}{_clean(sub, upper)}" if sub.strip() else "")
+            lines.append(f"Dialogue: 2,{_ts(start)},{_ts(end)},Hook,,0,0,0,,{{\\fscx140\\fscy140\\t(0,220,\\fscx100\\fscy100)\\fad(0,180)}}{body}")
+        else:
+            lines.append(f"Dialogue: 1,{_ts(start)},{_ts(end)},Big,,0,0,0,,{{\\fad(160,160)}}{_clean(text, upper)}")
     out_path.write_text(header + "\n".join(lines) + "\n", encoding="utf-8")
     return out_path

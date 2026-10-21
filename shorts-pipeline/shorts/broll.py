@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from .config import Config
+from .formats import BROLL_STYLES
 from .plan import ShortPlan
 from .tts import Voice
 from .util import run, write_json
@@ -95,18 +96,32 @@ def build_broll_film(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path) 
     segments: list[Path] = []
     overlays: list[tuple[str, float, float]] = []
     hook = plan.cues[0]
-    # 1) hook card
-    d0 = bounds[1] - bounds[0]
-    segments.append(render_card(cfg, card_spec(cfg, d0, [{"at": 0, "kind": "title", "text": hook.text or plan.title, **({"sub": hook.sub} if hook.sub else {})}]),
-                                 seg_dir / "00_hook.mp4"))
-    # 2) b-roll beats
     beats = plan.cues[1:]
+    d0 = bounds[1] - bounds[0]
+    cold = bool(cfg.get("formats.broll.cold_open", True)) and bool(beats)
+    under_hook = 0.0   # seconds of beat 1's scene that run under the hook (cold open without a hook style)
+    if cold:
+        # 1) cold open: no title card. The hook text slams in over a painted scene at frame 0; the scene is the hook's own
+        #    style when the plan gives cue 1 one, otherwise beat 1's scene simply starts early and runs under the hook.
+        hook_style = hook.style if hook.style in BROLL_STYLES else None
+        if hook_style and hook_style != beats[0].style:
+            log.info("cold open: %s for %.1fs", hook_style, d0)
+            segments.append(_render_scene(cfg, hook_style, d0, seg_dir / f"00_{hook_style}.mp4"))
+        else:
+            under_hook = d0
+        overlays.append(((hook.text or plan.title) + (f"\n{hook.sub}" if hook.sub else ""), 0.0, bounds[1] - 0.1, "hook"))
+    else:
+        # 1) hook card
+        segments.append(render_card(cfg, card_spec(cfg, d0, [{"at": 0, "kind": "title", "text": hook.text or plan.title, **({"sub": hook.sub} if hook.sub else {})}]),
+                                     seg_dir / "00_hook.mp4"))
+    # 2) b-roll beats
     for i, c in enumerate(beats, start=1):
         t0, t1 = bounds[i], bounds[i + 1]
         if t1 - t0 < 0.5:
             log.warning("beat %d is %.2fs; skipped", i, t1 - t0); continue
-        log.info("b-roll %d: %s for %.1fs", i, c.style, t1 - t0)
-        segments.append(_render_scene(cfg, c.style, t1 - t0, seg_dir / f"{i:02d}_{c.style}.mp4"))
+        lead_in = under_hook if i == 1 else 0.0
+        log.info("b-roll %d: %s for %.1fs%s", i, c.style, t1 - t0 + lead_in, " (runs under the hook)" if lead_in else "")
+        segments.append(_render_scene(cfg, c.style, t1 - t0 + lead_in, seg_dir / f"{i:02d}_{c.style}.mp4"))
         if c.text:
             overlays.append((c.text, t0 + 0.15, t1 - 0.1))
     # 3) end card over the outro

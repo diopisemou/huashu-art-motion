@@ -84,6 +84,20 @@ def lint_plan(plan: ShortPlan, cfg: Config) -> tuple[list[str], list[str]]:
             errors.append("the hook says 'in this video': state the payoff or the tension instead")
         if len(re.findall(r"[.!?](\s|$)", hook)) > 2:
             warnings.append("the hook is more than two sentences; it should land in the first second")
+        hl = hook.lower()
+        if re.search(r"\bexplained\b|\bin (60|sixty) seconds\b", hl):
+            warnings.append("the hook says 'explained' / 'in 60 seconds': that shape belongs in the title; open with a claim or a mistake")
+        if re.match(r"^(what|how) (is|are|does|do|did)\b|^(today|let's|here's|this is|in this)\b", hl) and " you" not in hl:
+            warnings.append("the hook opens like a definition; make it a claim someone could disagree with, or the viewer's own mistake")
+    if plan.format == "explainer" and plan.grammar in ("y3_whiteboard", "t1_3b1b") and len(plan.cues) > 1 and plan.cues[1].kind not in ("draw", "line", "equation"):
+        warnings.append(f"cue 2 is a `{plan.cues[1].kind}`: make it a draw/line/equation so the film opens on a drawing (cold open) instead of a bare title")
+    q = (getattr(plan, "question", "") or "").strip()
+    if not q:
+        warnings.append("no `question`: end with one specific question the viewer can answer in a comment (spoken before the outro, pinned under the video)")
+    elif not q.endswith("?"):
+        warnings.append("`question` should end with '?'")
+    elif len(q.split()) > 14:
+        warnings.append(f"`question` is {len(q.split())} words; keep it under 14 so it fits one caption page and the pinned comment")
     return errors, warnings
 
 

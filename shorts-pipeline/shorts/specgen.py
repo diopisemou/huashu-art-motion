@@ -100,6 +100,8 @@ def build_spec(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path, end_at
         at = 0.0 if i == 0 else lead + voice.time_at_char(off)
         if c.kind == "number":
             at = max(at, 0.9)  # the number needs 0.7-0.9 s to roll in before it lands
+        if i == 1 and c.kind in ("draw", "line", "equation") and plan.grammar in ("y3_whiteboard", "t1_3b1b") and bool(cfg.get("formats.cold_open", True)):
+            at = min(at, float(cfg.get("formats.cold_open_s", 1.2)))   # cold open: the first drawing starts while the title is still being written
         at = max(at, last_at + MIN_GAP) if i > 0 else at
         q = _cue_to_spec(plan, c, at)
         if q is None:
