@@ -86,10 +86,14 @@ class ShortPlan(BaseModel):
     data: PlanData = Field(default_factory=PlanData)
     cues: list[Cue] = Field(..., description="3-7 cues. The first is a `title` cue carrying the hook.")
     outro: str = Field(..., description="The closing line the voice says after the last cue (the CTA).")
+    question: str = Field("", description="One specific question the viewer can answer in a comment; spoken right before the outro and pinned under the video.")
     facts: list[Fact] = Field(default_factory=list, description="One entry per real number or claim in the narration/description, with its source URL. Required when any figure appears.")
 
     def narration_parts(self) -> list[str]:
         parts = [c.narration.strip() for c in self.cues]
+        q = (self.question or "").strip()
+        if q and parts:
+            parts[-1] = (parts[-1] + " " + q).strip()   # the question is asked over the last scene; the end card carries the CTA only
         if self.outro.strip():
             parts.append(self.outro.strip())
         return parts
@@ -132,10 +136,14 @@ Language of narration and on-screen text: {language}
 Closing line (use it as `outro`, you may adapt the wording slightly): {cta}
 
 Format rules
-- Total narration (all cue narrations + outro) <= {max_words} words, read at 125-150 words per minute: about 40 seconds.
-- Cue 1 is a `title` cue whose narration is the hook: one sentence, states the payoff or a tension, no "In this video".
-  Write three hooks from different formulas (a gap, a mistake, a number, a contrast, a question the viewer already has), score each 1-10 for
-  specificity, curiosity and honesty, keep the best; the on-screen hook (text) is <= 6 words and ADDS to the spoken hook, it never repeats it.
+- Total narration (all cue narrations + question + outro) <= {max_words} words, read at 125-150 words per minute: about 40 seconds.
+- Cue 1 is a `title` cue whose narration is the hook: one sentence that a viewer could disagree with, or a specific mistake they make, no "In this video".
+  Never a definition ("X is...", "X explained"): the phrase "explained in 60 seconds" belongs in the title only. Write three hooks from different
+  formulas (a claim, a mistake, a number, a contrast, the viewer's own question), score each 1-10 for specificity, curiosity and honesty, keep the best;
+  the on-screen hook (text) is <= 6 words and ADDS to the spoken hook, it never repeats it. The film opens on motion (the hook text is burned over the
+  first painted scene, or the first drawing starts while the title is written), so the hook has to work at frame 0.
+- `question`: one question the viewer can answer in a comment in a few words (their tool, their rule, their number). It is spoken right before the
+  outro and pinned under the video. Not "what do you think?": ask for something specific.
 - 3-6 more cues, each one idea, each narration 1-2 short sentences. On-screen text adds a second channel (the term, the number, the step name,
   the consequence); it never repeats the words being spoken at that moment. Put a re-hook (a turn, a surprise, a "but") near the middle.
 - Concrete over abstract: a step, a rule, a number, a before/after. No filler, no "let's dive in", no emojis.
@@ -157,13 +165,15 @@ FORMAT_RULES = {
     "list": "Set format='list', grammar='y5_kinetic_type'. Cues: title (hook), 3-4 point cues (label '01'..), optionally one number cue, one final highlight.",
     "hook_broll": (
         "Set format='hook_broll', grammar='y5_kinetic_type'. Cues: cue 1 is `title` (hook; text <= 6 words, sub optional) spoken in ONE sentence; "
+        "there is no title card: the hook text is burned over the first painted scene from frame 0 (give cue 1 its own `style` when the hook needs a different mood from beat 1); "
         "then 3-4 `broll` cues, each with `style` (an id from the list below), `text` = a <= 6-word caption burned over the scene, and 1-2 sentences of narration "
         "that tell this beat of the story or argument; pick styles whose mood matches the beat and never reuse a style; no other cue kinds. "
         "The outro is spoken over a closing card.\nB-roll styles: {styles}"
     ),
     "explainer": ("Set format='explainer' and pick y3_whiteboard, t1_3b1b or y1_kurzgesagt. 5-7 cues following that grammar's menu, in this order: "
                   "hook, the familiar world (what the viewer already does), the disruption (what goes wrong), the mechanism (why), the discovery (the fix), "
-                  "the consequence (what changes), recap in one line. Labels name the mechanism or the step; narration explains it."),
+                  "the consequence (what changes), recap in one line. Cue 2 (the familiar world) is a VISUAL cue (y3 draw, t1 equation or line) so the film "
+                  "opens on a drawing while the title is still being written. Labels name the mechanism or the step; narration explains it."),
     "keynote": "Set format='keynote', grammar='t2_keynote_ui'. Cues: title, three card cues with icons, one number cue.",
     "data": "Set format='data', grammar='t3_finance_chart' ONLY with a real dataset you can source in the description (data.series, data.source). If you cannot, set format='list' and write a list instead.",
 }

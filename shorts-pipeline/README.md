@@ -161,6 +161,15 @@ characters, a first description sentence over 125 characters, the word budget, a
 Scores in `shorts stats` are median-relative (views / channel median over videos 2-180 days old, times a retention
 factor when the Analytics scope is present), so one viral Short does not drown the rest.
 
+## Opening and closing (since Oct 21)
+
+Every film opens on motion. `hook_broll` has no title card any more: the hook text slams in over the first painted scene at
+frame 0 (`formats.broll.cold_open`; give cue 1 its own `style` when the hook needs a different mood from beat 1). Explainers
+start their first drawing (`draw` / `line` / `equation`, which must be cue 2) by `formats.cold_open_s` while the title is still
+being written. Hooks are claims or mistakes, never definitions: lint warns on "explained" or a "what is" opener in the hook.
+Every plan carries a `question` the viewer can answer in a comment; it is spoken before the outro, added to the description
+and heads the pinned comment in `publish.txt`.
+
 ## Project layout
 
 ```

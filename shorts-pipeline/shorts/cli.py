@@ -52,7 +52,9 @@ def build(cfg: Config, plan, out_dir: Path, *, skip_qa: bool = False) -> dict:
     if plan.format == "hook_broll":
         from .broll import build_broll_film
         silent, duration, overlays = build_broll_film(cfg, plan, voice, out_dir)
-        spec_path = out_dir / "segments" / "00_hook.json"       # qa runs on the hook card spec; the scenes are huashu's own
+        spec_path = out_dir / "segments" / "00_hook.json"       # qa runs on the hook card spec when there is one; the scenes are huashu's own
+        if not spec_path.exists():
+            spec_path = out_dir / "segments.json"                # cold open: no hook card
         final = finish(cfg, silent, voice, duration, out_dir, overlays=overlays)
     else:
         from .broll import concat, end_card_spec, outro_start, render_card
@@ -103,7 +105,10 @@ def pinned_comment(cfg: Config, plan) -> str:
     lead = str(cfg.get("monetize.lead_line", "") or "").strip()
     link = money_link(cfg, plan)
     link_line = (f"{link['name']}: {link['url']}" if link and link["name"] else (link["url"] if link else ""))
-    return tpl.format(lead_line=(lead + "\n") if lead else "", link_line=(link_line + "\n") if link_line else "").strip()
+    q = (getattr(plan, "question", "") or "").strip()
+    if q and "{question}" not in tpl:
+        tpl = "{question}" + tpl
+    return tpl.format(question=(q + "\n") if q else "", lead_line=(lead + "\n") if lead else "", link_line=(link_line + "\n") if link_line else "").strip()
 
 
 def _hashtags(tags: list[str], limit: int | None = None) -> str:
@@ -129,7 +134,7 @@ def crosspost_caption(cfg: Config, plan) -> str:
     cap = int(cfg.get("crosspost.caption_max", 2000))
     hashtags = _hashtags(_hashtag_tags(cfg, plan), int(cfg.get("publish.max_hashtags", 5)))
     link = money_link(cfg, plan)
-    parts = [plan.title.strip(), plan.description.strip()]
+    parts = [plan.title.strip(), plan.description.strip(), (getattr(plan, "question", "") or "").strip()]
     if link:
         parts.append(f"{link['name'] + ': ' if link['name'] else ''}{link['url']}")
     parts.append(hashtags)
@@ -163,6 +168,9 @@ def youtube_description(cfg: Config, plan) -> str:
     if lead:
         parts.append(lead)                       # the first line shows above the fold on a Short
     parts.append(plan.description.strip())
+    q = (getattr(plan, "question", "") or "").strip()
+    if q:
+        parts.append(q)                          # the same question the voice asks; the pinned comment repeats it
     link = money_link(cfg, plan)
     if link:
         parts.append(f"{link['name'] + ': ' if link['name'] else 'More: '}{link['url']}")
@@ -444,9 +452,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"recent titles to avoid: {'; '.join(recent_titles(cfg)) or '(none)'}")
         print(f"format scores so far: {scores or '(none yet)'}")
         print("\n# Format brief\n" + FORMATS[fmt]["brief"] + "\n" + rules)
-        print("\n# Writing rules\n- Cue 1 is a `title` cue whose narration is the hook (one sentence, no 'In this video'). Write three hooks from different\n"
-              "  formulas (gap, mistake, number, contrast, the viewer's own question), score each 1-10 for specificity/curiosity/honesty, keep the best.\n"
-              "  The on-screen hook (text, <= 6 words) ADDS to the spoken hook; it never repeats it.\n"
+        print("\n# Writing rules\n- Cue 1 is a `title` cue whose narration is the hook: one sentence a viewer could disagree with, or a specific mistake they make\n"
+              "  (no 'In this video', never a definition; 'explained in 60 seconds' belongs in the title only). Write three hooks from different formulas\n"
+              "  (claim, mistake, number, contrast, the viewer's own question), score each 1-10 for specificity/curiosity/honesty, keep the best.\n"
+              "  The on-screen hook (text, <= 6 words) ADDS to the spoken hook; it never repeats it. The film opens on motion (no title card), so it must work at frame 0.\n"
+              "- `question`: one specific question the viewer can answer in a comment (their tool, their rule, their number); spoken before the outro, pinned under the video.\n"
               "- Each cue's `narration` is exactly what the voice says while that cue is on screen (1-2 short sentences). Put a re-hook (a turn, a 'but') near the middle.\n"
               "- On-screen text is a second channel (the term, the step name, the number, the consequence); it never repeats the words spoken over it.\n"
               f"- Narration <= {cfg.get('llm.max_words', 100)} words total: it is read at 125-150 wpm, about 40 s. Fewer words beat a faster voice.\n"

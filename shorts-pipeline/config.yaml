@@ -42,6 +42,8 @@ captions:
   active_color: "#FFC83C" # the word being spoken
   outline: 5
   big_size: 96            # b-roll segment captions (top of frame, wraps to two lines)
+  hook_size: 124          # cold-open hook text burned over the first scene (slams in at frame 0)
+  hook_offset: 380        # px below safe_top where the hook text sits (upper third, clear of the phone UI)
 
 voice:
   provider: auto          # auto -> elevenlabs when ELEVENLABS_API_KEY is set, else edge
@@ -85,7 +87,7 @@ monetize:
   #  - { name: "RideSentinel", url: "https://ridesentinel.app", keywords: [driver, uber, ride] }
   end_card: true                # closing card on every format: the CTA + end_card_sub
   end_card_sub: "link in the description"
-  pinned_comment: "{lead_line}{link_line}What should I explain in 60 seconds next? Tell me below."   # written to publish.txt; paste it as the pinned comment
+  pinned_comment: "{question}{lead_line}{link_line}I read every comment. Tell me what to explain next."   # {question} = the plan's closing question; written to publish.txt, paste it as the pinned comment
   affiliate_disclosure: "Some links may be affiliate links."   # appended when a link is present; "" to disable
 
 crosspost:
@@ -102,7 +104,10 @@ formats:
   # `shorts stats` has linked published videos, multiplies these by how each format has performed.
   weights: { list: 1.0, hook_broll: 1.2, explainer: 1.3, keynote: 0.5, data: 0.0 }   # explainers lead on this channel so far; data stays at 0 until a real dataset source exists
   no_repeat_days: 1
+  cold_open: true         # explainers: the first drawing (draw/line/equation cue) starts by cold_open_s while the title is still being written
+  cold_open_s: 1.2
   broll:
+    cold_open: true       # hook_broll: no title card; the hook text slams in over the first painted scene at frame 0
     styles: []            # subset of huashu gallery scene ids to allow; empty = all 35
     max_segment_s: 7      # a beat longer than this is still one scene; the cap keeps renders under ~10 min
     end_card_s: 2.5       # minimum length of the closing card
