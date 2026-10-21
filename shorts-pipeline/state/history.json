@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
+      "fetched": "2026-10-21T10:11:04+00:00",
       "rel": 1.96
     }
   },
@@ -73,7 +73,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
+      "fetched": "2026-10-21T10:11:04+00:00",
       "rel": 0.22
     }
   },
@@ -94,7 +94,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T06:21:50Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
+      "fetched": "2026-10-21T10:11:04+00:00",
       "rel": 0.27
     }
   },
@@ -115,7 +115,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T19:15:51Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
+      "fetched": "2026-10-21T10:11:04+00:00",
       "rel": 1.0
     }
   },
@@ -136,7 +136,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-15T10:28:13Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
+      "fetched": "2026-10-21T10:11:04+00:00",
       "rel": 0.55
     }
   },
@@ -157,7 +157,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-16T10:19:29Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
+      "fetched": "2026-10-21T10:11:04+00:00",
       "rel": 0.39
     }
   },
@@ -174,12 +174,12 @@
     "url": "https://youtube.com/shorts/oMNEjNsmess",
     "note": "built by the 15:07 Routine; y1_kurzgesagt preview showed node 2 colliding with the title again, so the first t1_3b1b build was used instead; three-pass mixer lifted 1.7 dB to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 676,
+      "views": 677,
       "likes": 6,
       "comments": 0,
       "published_at": "2026-10-16T19:14:33Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
-      "rel": 5.88
+      "fetched": "2026-10-21T10:11:04+00:00",
+      "rel": 5.89
     }
   },
   {
@@ -195,12 +195,12 @@
     "url": "https://youtube.com/shorts/me61WlvReJI",
     "note": "built by the 06:07 Routine (fired on time); three-pass mixer lifted 0.9 dB to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 202,
+      "views": 201,
       "likes": 3,
       "comments": 0,
       "published_at": "2026-10-17T10:18:48Z",
-      "fetched": "2026-10-19T19:08:55+00:00",
-      "rel": 1.76
+      "fetched": "2026-10-21T10:11:04+00:00",
+      "rel": 1.75
     }
   },
   {
@@ -216,11 +216,12 @@
     "url": "https://youtube.com/shorts/5U3lWL3DLNY",
     "note": "built by the 15:07 Routine (fired on time); preview showed the draw label touching the right edge, shortened before the build; three-pass mixer lifted 2.1 dB to -14.1 LUFS; TikTok cross-post failed twice that evening (Postiz: access token invalid), succeeded on a retry the next morning at 10:10Z; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 170,
+      "views": 173,
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-17T19:14:43Z",
-      "fetched": "2026-10-19T19:08:55+00:00"
+      "fetched": "2026-10-21T10:11:04+00:00",
+      "rel": 1.5
     }
   },
   {
@@ -240,7 +241,8 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-18T10:14:58Z",
-      "fetched": "2026-10-19T19:08:55+00:00"
+      "fetched": "2026-10-21T10:11:04+00:00",
+      "rel": 0.7
     }
   },
   {
@@ -256,11 +258,12 @@
     "url": "https://youtube.com/shorts/M0rGUpVVHyE",
     "note": "built by the 15:07 Routine (fired on time); styles cubism/roman mosaic/kirby/monet, all first use; three-pass mixer to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 190,
+      "views": 195,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-18T19:19:43Z",
-      "fetched": "2026-10-19T19:08:55+00:00"
+      "fetched": "2026-10-21T10:11:04+00:00",
+      "rel": 1.7
     }
   },
   {
@@ -283,11 +286,11 @@
     "url": "https://youtube.com/shorts/LQpLz7uub-Q",
     "note": "Monday run: audit written (explainer 5.56x, '60 seconds' titles 3.57x), t1_3b1b explainer, lint clean, QA OK (0 frozen, 163 wpm, STT 0.99), published public, cross-posted to TikTok @bidewio via Postiz at 10:20Z.",
     "stats": {
-      "views": 206,
+      "views": 217,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-19T10:18:11Z",
-      "fetched": "2026-10-19T19:08:55+00:00"
+      "fetched": "2026-10-21T10:11:04+00:00"
     }
   },
   {
@@ -308,6 +311,33 @@
       "lint_warnings": 0
     },
     "url": "https://youtube.com/shorts/clOwi0HW0Ps",
-    "note": "built by the 15:07 Routine (fired on time); styles hopper/constructivism/bauhaus/munch, all first use; lint clean, QA OK (0 frozen, pace 180 wpm warning at 85 words, STT 1.0); published public; first TikTok cross-post got a Postiz 502, retry succeeded, PUBLISHED 19:19Z @bidewio; voice speed lowered 0.9 -> 0.85 in config for tomorrow."
+    "note": "built by the 15:07 Routine (fired on time); styles hopper/constructivism/bauhaus/munch, all first use; lint clean, QA OK (0 frozen, pace 180 wpm warning at 85 words, STT 1.0); published public; first TikTok cross-post got a Postiz 502, retry succeeded, PUBLISHED 19:19Z @bidewio; voice speed lowered 0.9 -> 0.85 in config for tomorrow.",
+    "stats": {
+      "views": 291,
+      "likes": 2,
+      "comments": 0,
+      "published_at": "2026-10-19T19:16:23Z",
+      "fetched": "2026-10-21T10:11:04+00:00"
+    }
+  },
+  {
+    "date": "2026-10-21T10:17:24+00:00",
+    "topic": "Project instruction files explained in 60 seconds: what belongs in CLAUDE.md",
+    "title": "Project instruction files explained in 60 seconds",
+    "format": "explainer",
+    "grammar": "y3_whiteboard",
+    "duration": 41.27,
+    "qa_ok": true,
+    "video_id": "lGU7e8b6j6U",
+    "out_dir": "out/2026-10-21-project-instruction-files-explained-in-60-second",
+    "metrics": {
+      "words": 95,
+      "pace_wpm": 143.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "url": "https://youtube.com/shorts/lGU7e8b6j6U",
+    "note": "built by the 06:07 Routine (fired on time; both Oct 20 runs were missed while the session was idle and were not backfilled); y3_whiteboard explainer, lint clean, QA OK (0 frozen, 143 wpm at voice speed 0.85, STT 1.0); published public; cross-posted to TikTok @bidewio via Postiz at 10:21Z."
   }
 ]
