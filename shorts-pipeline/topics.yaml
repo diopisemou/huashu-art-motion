@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Stop pasting error messages: hand the agent the failing test instead'
 - 'Small diffs win: one function per prompt beats one prompt for the feature'
 - Let the agent run the tests itself, not just write them
 - 'Plan first: make the agent list its steps before it touches a file'
