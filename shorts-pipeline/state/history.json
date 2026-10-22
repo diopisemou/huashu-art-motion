@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 1.3
     }
   },
@@ -73,7 +73,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 0.14
     }
   },
@@ -94,7 +94,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T06:21:50Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 0.18
     }
   },
@@ -115,7 +115,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T19:15:51Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 0.66
     }
   },
@@ -136,7 +136,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-15T10:28:13Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 0.36
     }
   },
@@ -157,7 +157,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-16T10:19:29Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 0.26
     }
   },
@@ -178,7 +178,7 @@
       "likes": 6,
       "comments": 0,
       "published_at": "2026-10-16T19:14:33Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 3.91
     }
   },
@@ -199,7 +199,7 @@
       "likes": 3,
       "comments": 0,
       "published_at": "2026-10-17T10:18:48Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 1.16
     }
   },
@@ -220,7 +220,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-17T19:14:43Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 1.0
     }
   },
@@ -241,7 +241,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-18T10:14:58Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 0.47
     }
   },
@@ -258,11 +258,11 @@
     "url": "https://youtube.com/shorts/M0rGUpVVHyE",
     "note": "built by the 15:07 Routine (fired on time); styles cubism/roman mosaic/kirby/monet, all first use; three-pass mixer to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 197,
+      "views": 198,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-18T19:19:43Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 1.14
     }
   },
@@ -290,7 +290,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-19T10:18:11Z",
-      "fetched": "2026-10-21T19:09:47+00:00",
+      "fetched": "2026-10-22T10:10:33+00:00",
       "rel": 1.25
     }
   },
@@ -314,11 +314,12 @@
     "url": "https://youtube.com/shorts/clOwi0HW0Ps",
     "note": "built by the 15:07 Routine (fired on time); styles hopper/constructivism/bauhaus/munch, all first use; lint clean, QA OK (0 frozen, pace 180 wpm warning at 85 words, STT 1.0); published public; first TikTok cross-post got a Postiz 502, retry succeeded, PUBLISHED 19:19Z @bidewio; voice speed lowered 0.9 -> 0.85 in config for tomorrow.",
     "stats": {
-      "views": 292,
+      "views": 293,
       "likes": 2,
       "comments": 0,
       "published_at": "2026-10-19T19:16:23Z",
-      "fetched": "2026-10-21T19:09:47+00:00"
+      "fetched": "2026-10-22T10:10:33+00:00",
+      "rel": 1.69
     }
   },
   {
@@ -341,11 +342,11 @@
     "url": "https://youtube.com/shorts/lGU7e8b6j6U",
     "note": "built by the 06:07 Routine (fired on time; both Oct 20 runs were missed while the session was idle and were not backfilled); y3_whiteboard explainer, lint clean, QA OK (0 frozen, 143 wpm at voice speed 0.85, STT 1.0); published public; cross-posted to TikTok @bidewio via Postiz at 10:21Z.",
     "stats": {
-      "views": 89,
+      "views": 96,
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-21T10:18:35Z",
-      "fetched": "2026-10-21T19:09:47+00:00"
+      "fetched": "2026-10-22T10:10:33+00:00"
     }
   },
   {
@@ -366,6 +367,33 @@
       "lint_warnings": 0
     },
     "url": "https://youtube.com/shorts/tc7ezXHzg2A",
-    "note": "built by the 15:07 Routine (fired on time); styles kusama/greek vase/dali/shinkai, all first use; 429 and Retry-After sourced in facts; lint clean, QA OK (0 frozen, 155 wpm, STT 0.98); published public; cross-posted to TikTok @bidewio via Postiz at 19:19Z; critic: kusama dot pattern is the busiest background for captions."
+    "note": "built by the 15:07 Routine (fired on time); styles kusama/greek vase/dali/shinkai, all first use; 429 and Retry-After sourced in facts; lint clean, QA OK (0 frozen, 155 wpm, STT 0.98); published public; cross-posted to TikTok @bidewio via Postiz at 19:19Z; critic: kusama dot pattern is the busiest background for captions.",
+    "stats": {
+      "views": 70,
+      "likes": 1,
+      "comments": 0,
+      "published_at": "2026-10-21T19:16:46Z",
+      "fetched": "2026-10-22T10:10:33+00:00"
+    }
+  },
+  {
+    "date": "2026-10-22T10:15:41+00:00",
+    "topic": "Your AI agent needs a definition of done, not a longer prompt",
+    "title": "Definition of done for AI agents explained in 60 seconds",
+    "format": "explainer",
+    "grammar": "t1_3b1b",
+    "duration": 37.2,
+    "qa_ok": true,
+    "video_id": "foGeEp3KqI0",
+    "out_dir": "out/2026-10-22-definition-of-done-for-ai-agents-explained-in-60",
+    "metrics": {
+      "words": 94,
+      "pace_wpm": 157.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "url": "https://youtube.com/shorts/foGeEp3KqI0",
+    "note": "built by the 06:07 Routine (fired on time); FIRST cold-open build: t1_3b1b with the equation written from 1.2 s under the title, closing question spoken over the last scene and pinned; lint clean, QA OK (0 frozen, 157 wpm, STT 1.0); published public; cross-posted to TikTok @bidewio via Postiz."
   }
 ]
