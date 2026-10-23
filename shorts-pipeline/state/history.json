@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 1.35
     }
   },
@@ -73,7 +73,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 0.15
     }
   },
@@ -94,7 +94,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T06:21:50Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 0.19
     }
   },
@@ -115,7 +115,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T19:15:51Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 0.69
     }
   },
@@ -136,7 +136,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-15T10:28:13Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 0.38
     }
   },
@@ -157,7 +157,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-16T10:19:29Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 0.27
     }
   },
@@ -178,7 +178,7 @@
       "likes": 7,
       "comments": 0,
       "published_at": "2026-10-16T19:14:33Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 4.07
     }
   },
@@ -199,7 +199,7 @@
       "likes": 3,
       "comments": 0,
       "published_at": "2026-10-17T10:18:48Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 1.2
     }
   },
@@ -220,7 +220,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-17T19:14:43Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 1.0
     }
   },
@@ -241,7 +241,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-18T10:14:58Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 0.49
     }
   },
@@ -258,12 +258,12 @@
     "url": "https://youtube.com/shorts/M0rGUpVVHyE",
     "note": "built by the 15:07 Routine (fired on time); styles cubism/roman mosaic/kirby/monet, all first use; three-pass mixer to -14.0 LUFS; cross-posted to TikTok @bidewio",
     "stats": {
-      "views": 198,
+      "views": 196,
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-18T19:19:43Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
-      "rel": 1.19
+      "fetched": "2026-10-23T10:10:02+00:00",
+      "rel": 1.17
     }
   },
   {
@@ -290,7 +290,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-19T10:18:11Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 1.3
     }
   },
@@ -318,7 +318,7 @@
       "likes": 2,
       "comments": 0,
       "published_at": "2026-10-19T19:16:23Z",
-      "fetched": "2026-10-22T19:09:38+00:00",
+      "fetched": "2026-10-23T10:10:02+00:00",
       "rel": 1.75
     }
   },
@@ -346,7 +346,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-21T10:18:35Z",
-      "fetched": "2026-10-22T19:09:38+00:00"
+      "fetched": "2026-10-23T10:10:02+00:00"
     }
   },
   {
@@ -369,11 +369,11 @@
     "url": "https://youtube.com/shorts/tc7ezXHzg2A",
     "note": "built by the 15:07 Routine (fired on time); styles kusama/greek vase/dali/shinkai, all first use; 429 and Retry-After sourced in facts; lint clean, QA OK (0 frozen, 155 wpm, STT 0.98); published public; cross-posted to TikTok @bidewio via Postiz at 19:19Z; critic: kusama dot pattern is the busiest background for captions.",
     "stats": {
-      "views": 70,
+      "views": 74,
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-21T19:16:46Z",
-      "fetched": "2026-10-22T19:09:38+00:00"
+      "fetched": "2026-10-23T10:10:02+00:00"
     }
   },
   {
@@ -396,11 +396,11 @@
     "url": "https://youtube.com/shorts/foGeEp3KqI0",
     "note": "built by the 06:07 Routine (fired on time); FIRST cold-open build: t1_3b1b with the equation written from 1.2 s under the title, closing question spoken over the last scene and pinned; lint clean, QA OK (0 frozen, 157 wpm, STT 1.0); published public; cross-posted to TikTok @bidewio via Postiz.",
     "stats": {
-      "views": 64,
+      "views": 68,
       "likes": 2,
       "comments": 0,
       "published_at": "2026-10-22T10:16:55Z",
-      "fetched": "2026-10-22T19:09:38+00:00"
+      "fetched": "2026-10-23T10:10:02+00:00"
     }
   },
   {
@@ -421,6 +421,33 @@
       "lint_warnings": 0
     },
     "url": "https://youtube.com/shorts/P9YH86YhPto",
-    "note": "built by the 15:07 Routine (fired on time); first hook_broll cold open (hook burned over the picasso_blue scene from frame 0, no title card); styles picasso_blue/egypt/shadowpuppet/nouveau, all first use; lint clean, QA OK (0 frozen, pace 170 wpm warning at 97 words, STT 0.99); published public; cross-posted to TikTok @bidewio via Postiz."
+    "note": "built by the 15:07 Routine (fired on time); first hook_broll cold open (hook burned over the picasso_blue scene from frame 0, no title card); styles picasso_blue/egypt/shadowpuppet/nouveau, all first use; lint clean, QA OK (0 frozen, pace 170 wpm warning at 97 words, STT 0.99); published public; cross-posted to TikTok @bidewio via Postiz.",
+    "stats": {
+      "views": 53,
+      "likes": 1,
+      "comments": 0,
+      "published_at": "2026-10-22T19:21:25Z",
+      "fetched": "2026-10-23T10:10:02+00:00"
+    }
+  },
+  {
+    "date": "2026-10-23T10:21:14+00:00",
+    "topic": "Small diffs win: one function per prompt beats one prompt for the feature",
+    "title": "Small diffs for AI agents explained in 60 seconds",
+    "format": "list",
+    "grammar": "y5_kinetic_type",
+    "duration": 42.96,
+    "qa_ok": true,
+    "video_id": "vUmFrgXFKZg",
+    "out_dir": "out/2026-10-23-small-diffs-for-ai-agents-explained-in-60-second",
+    "metrics": {
+      "words": 96,
+      "pace_wpm": 138.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "url": "https://youtube.com/shorts/vUmFrgXFKZg",
+    "note": "Critic held the first build (last card static ~14 s, beat-4 narration did not echo the card). Rebuilt once with a 4th recap point card and matching narration; first build parked, not published. TikTok via Postiz PUBLISHED 10:24Z (Bidew IO)."
   }
 ]
