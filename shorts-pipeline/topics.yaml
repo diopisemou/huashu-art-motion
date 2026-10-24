@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Plan first: make the agent list its steps before it touches a file'
 - Your agent should open a pull request, never push to main
 - Ask the agent to explain the bug before it fixes it
 - 'Review the diff, not the chat: what to read before accepting AI code'

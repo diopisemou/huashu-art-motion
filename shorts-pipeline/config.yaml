@@ -52,7 +52,7 @@ voice:
     voice_id: ""          # or set ELEVENLABS_VOICE_ID
     stability: 0.5
     similarity_boost: 0.75
-    speed: 0.85   # 0.9 still read at 161-180 wpm on Oct 19; target 125-150
+    speed: 0.8    # 0.85 read at 171-179 wpm on Oct 23-24; target 125-150
   edge:
     voice: en-US-AndrewMultilingualNeural   # `uv run edge-tts --list-voices` to browse
     rate: "+5%"
