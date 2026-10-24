@@ -52,7 +52,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T14:19:24Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 1.96
     }
   },
@@ -73,7 +73,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-09T19:27:06Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.22
     }
   },
@@ -94,7 +94,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T06:21:50Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.27
     }
   },
@@ -115,7 +115,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-14T19:15:51Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 1.0
     }
   },
@@ -136,7 +136,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-15T10:28:13Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.55
     }
   },
@@ -157,7 +157,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-16T10:19:29Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.39
     }
   },
@@ -178,7 +178,7 @@
       "likes": 7,
       "comments": 0,
       "published_at": "2026-10-16T19:14:33Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 5.9
     }
   },
@@ -199,7 +199,7 @@
       "likes": 3,
       "comments": 0,
       "published_at": "2026-10-17T10:18:48Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 1.75
     }
   },
@@ -220,7 +220,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-17T19:14:43Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 1.45
     }
   },
@@ -241,7 +241,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-18T10:14:58Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.7
     }
   },
@@ -262,7 +262,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-18T19:19:43Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 1.7
     }
   },
@@ -290,7 +290,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-19T10:18:11Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 1.89
     }
   },
@@ -318,7 +318,7 @@
       "likes": 2,
       "comments": 0,
       "published_at": "2026-10-19T19:16:23Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 2.54
     }
   },
@@ -346,7 +346,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-21T10:18:35Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.84
     }
   },
@@ -374,7 +374,7 @@
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-21T19:16:46Z",
-      "fetched": "2026-10-24T10:09:15+00:00",
+      "fetched": "2026-10-24T19:09:13+00:00",
       "rel": 0.64
     }
   },
@@ -402,7 +402,8 @@
       "likes": 2,
       "comments": 0,
       "published_at": "2026-10-22T10:16:55Z",
-      "fetched": "2026-10-24T10:09:15+00:00"
+      "fetched": "2026-10-24T19:09:13+00:00",
+      "rel": 0.62
     }
   },
   {
@@ -429,7 +430,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-22T19:21:25Z",
-      "fetched": "2026-10-24T10:09:15+00:00"
+      "fetched": "2026-10-24T19:09:13+00:00"
     }
   },
   {
@@ -456,7 +457,7 @@
       "likes": 0,
       "comments": 0,
       "published_at": "2026-10-23T10:21:51Z",
-      "fetched": "2026-10-24T10:09:15+00:00"
+      "fetched": "2026-10-24T19:09:13+00:00"
     }
   },
   {
@@ -479,11 +480,11 @@
     "url": "https://youtube.com/shorts/iVUfmmPlJUQ",
     "note": "built by the 15:07 Routine (fired on time); hook_broll cold open over 32_rembrandt; critic held the first build (ghibli last beat pale and near-static), rebuilt once with 16_2026 and 09_postimp (first use of rembrandt/rubberhose/2026/haring/postimp); lint clean, QA OK (0 frozen, pace 171 wpm warning at 87 words, STT 1.0); published public; TikTok cross-post FAILED twice: Postiz API 401 'No subscription found' (subscription lapsed, needs Bachir).",
     "stats": {
-      "views": 134,
+      "views": 137,
       "likes": 1,
       "comments": 0,
       "published_at": "2026-10-23T19:24:44Z",
-      "fetched": "2026-10-24T10:09:15+00:00"
+      "fetched": "2026-10-24T19:09:13+00:00"
     }
   },
   {
@@ -504,6 +505,33 @@
       "lint_warnings": 0
     },
     "url": "https://youtube.com/shorts/DBn7bxPWASs",
-    "note": "built by the 06:07 Routine (fired on time); first build read at 179 wpm with the last card holding ~13 s, so voice speed lowered 0.85 -> 0.8 in config and the last-card narration trimmed, rebuilt once (169 wpm, 0 frozen, STT 1.0); critic PUBLISH (retold the topic; notes yellow key words on yellow cards are low contrast); published public; TikTok cross-post FAILED twice: Postiz API 401 'No subscription found' (needs Bachir)."
+    "note": "built by the 06:07 Routine (fired on time); first build read at 179 wpm with the last card holding ~13 s, so voice speed lowered 0.85 -> 0.8 in config and the last-card narration trimmed, rebuilt once (169 wpm, 0 frozen, STT 1.0); critic PUBLISH (retold the topic; notes yellow key words on yellow cards are low contrast); published public; TikTok cross-post FAILED twice: Postiz API 401 'No subscription found' (needs Bachir).",
+    "stats": {
+      "views": 92,
+      "likes": 0,
+      "comments": 0,
+      "published_at": "2026-10-24T10:19:36Z",
+      "fetched": "2026-10-24T19:09:13+00:00"
+    }
+  },
+  {
+    "date": "2026-10-24T19:31:03+00:00",
+    "topic": "Your agent should open a pull request, never push to main",
+    "title": "Pull requests for AI agents explained in 60 seconds",
+    "format": "hook_broll",
+    "grammar": "y5_kinetic_type",
+    "duration": 33.8,
+    "qa_ok": true,
+    "video_id": "rBHLHacVnsU",
+    "out_dir": "out/2026-10-24-pull-requests-for-ai-agents-explained-in-60-seco",
+    "metrics": {
+      "words": 87,
+      "pace_wpm": 161.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "url": "https://youtube.com/shorts/rBHLHacVnsU",
+    "note": "built by the 15:07 Routine (fired on time); hook_broll cold open over 05_gothic; critic held the first build (13_pop thought bubble under the beat-1 caption), rebuilt once with 30_matisse (first use of gothic/matisse/ink/vaporwave/raytrace); lint clean, QA OK (0 frozen, 161 wpm at voice speed 0.8, STT 1.0); critic retold the topic; published public; TikTok cross-post FAILED twice: Postiz API 401 'No subscription found' (third miss, needs Bachir)."
   }
 ]
