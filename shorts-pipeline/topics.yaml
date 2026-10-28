@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- Why the agent loses the thread after an hour, and when to start a fresh session
 - Give the agent a scratch folder so it stops littering the repo
 - Prompt with one example from your own code, not with adjectives
 - 'One agent, one task: why ''also fix the styling'' breaks the run'
