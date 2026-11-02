@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Stop asking for ''error handling'': the agent wraps everything in try and swallows the bug'
 - 'Paste the schema, not a description of it: why agents invent columns that do not exist'
 - '''Use best practices'' tells the agent nothing: name the one practice you mean'
 - 'Ask what the agent assumed before you read its diff: the cheapest review question'
