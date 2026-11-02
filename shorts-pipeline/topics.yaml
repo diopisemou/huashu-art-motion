@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- '''Fix the bug'' is not a prompt: paste the line, the input and what you expected'
 - 'Stop asking for ''error handling'': the agent wraps everything in try and swallows the bug'
 - 'Paste the schema, not a description of it: why agents invent columns that do not exist'
 - '''Use best practices'' tells the agent nothing: name the one practice you mean'
