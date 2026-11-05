@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- '''Make it faster'' is a wish: give the agent the measurement, the number and the budget'
 - '''Add comments'' makes the agent narrate the obvious: ask for the why, or ask for nothing'
 - '''Like the other endpoint'' means nothing to the agent: paste the path, not the pronoun'
 - 'Stop asking the agent ''is this correct?'': it says yes; ask what would break it'
