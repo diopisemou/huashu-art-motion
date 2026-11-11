@@ -108,11 +108,12 @@ Exit code 0 = built and QA passed, 2 = built but QA flagged problems (see `qa_re
 
 ### Scheduling
 
-**Claude Code cloud Routine** (what is set up now, 06:07 America/Toronto daily): a fresh session runs `shorts next`,
-writes `plan.json` itself (the session is Claude, so no Anthropic API key is needed), runs
-`shorts build --plan plan.json --record`, looks at the sheet, then publishes with `shorts publish out/<dir>` when
-`YT_TOKEN_JSON` is set (otherwise it hands you `final.mp4`, `sheet.jpg` and `publish.txt` to upload by hand). It
-reads `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID` and `YT_TOKEN_JSON` from the cloud environment's secrets.
+**Claude Code cloud Routine** (what is set up now, 06:07 and 15:07 America/Toronto daily): each firing starts a
+fresh session that follows [`ROUTINE.md`](ROUTINE.md): `scripts/cloud_setup.sh` prepares the container, the session
+runs `shorts next`, writes `plan.json` itself (the session is Claude, so no Anthropic API key is needed), builds,
+runs the critic pass, publishes with `shorts publish out/<dir>`, reports, and pushes `state/history.json` and
+`topics.yaml` back to this branch. It reads `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`, `YT_TOKEN_JSON` and
+`POSTIZ_API_KEY` from the cloud environment's variables.
 
 **GitHub Actions** (included, `.github/workflows/daily.yml`): the same job on GitHub's runners, build-only by default
 (set the `publish` input to upload). Add repository secrets `ANTHROPIC_API_KEY`, `ELEVENLABS_API_KEY`,
