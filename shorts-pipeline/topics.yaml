@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- '''Don''t break anything'' is not an instruction: name the test that must stay green'
 - '''Refactor this'' with no target is a demolition order: name the one smell you want gone'
 - 'The agent''s ''done'' is a claim, not a result: ask for the command that proves it'
 - 'Pasting the whole log buries the line that matters: paste the first error, not the last'
