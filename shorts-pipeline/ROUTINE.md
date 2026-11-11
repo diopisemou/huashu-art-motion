@@ -100,8 +100,9 @@ fit the channel were "git worktrees" and "claude skills"; the best-held Short wa
 - **Explainer grammar.** Use `t1_3b1b` (the best-held style: 38 % stayed). `y3_whiteboard` is switched off in
   `config.yaml` and lint rejects it. `y1_kurzgesagt` only for a system with parts, and preview it
   first with `uv run shorts preview --plan plan.json --times 1,8,16,24` and look at the stills.
-- **Terminal format** (`format: terminal`, grammar `t4_terminal`; off in `config.yaml` until Bachir approves the
-  samples, then the chooser picks it like any other). The film is a terminal window under a headline. Cue 1 `title`
+- **Terminal format** (`format: terminal`, grammar `t4_terminal`; approved by Bachir on Nov 11 and the most likely
+  pick). Keep the hook to one short sentence: cue 2 is typed at 1.2 s, and a long hook leaves a "working" line
+  running for seconds before the output arrives. The film is a terminal window under a headline. Cue 1 `title`
   is the hook as a headline (<= 6 words, `key` tints one word). Cue 2 is a `cmd`, `prompt` or `key` so typing starts
   within the first second. Tell it as before / after: the mistake as the viewer types it today and what comes back,
   `clear`, the fix (the exact command or key), what comes back now, one `highlight` on the words that prove it.
