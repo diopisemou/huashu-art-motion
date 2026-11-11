@@ -92,6 +92,12 @@ def choose_format(cfg: Config, history: list[dict], scores: dict[str, float] | N
     no_repeat = int(cfg.get("formats.no_repeat_days", 1))
     recent = [h.get("format") for h in history[-no_repeat:] if h.get("format")]
     candidates = [f for f in ids if f not in recent] or ids
+    built = {h.get("format") for h in history}
+    fresh = [f for f in candidates if f not in built]
+    if fresh:                                                    # a format that has never been built has no score yet: it goes first
+        pick = max(fresh, key=lambda f: weights[f])
+        log.info("format: %s (never built before; it goes first)", pick)
+        return pick
     if scores:
         top = max(scores.values()) or 1.0
         for f in candidates:
