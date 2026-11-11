@@ -45,7 +45,7 @@ def build_audit(cfg: Config, hist: list[dict]) -> str:
     views = [h["stats"]["views"] for h in scored]
     has_hold = any(h["stats"].get("avg_view_pct") is not None for h in scored)
     lines += [f"{len(scored)} scored videos (published 2-180 days ago), median views {int(statistics.median(views))}, "
-              f"retention {'available' if has_hold else 'NOT available (re-run `shorts auth` to add the Analytics scope)'}.", ""]
+              f"retention {'available' if has_hold else 'NOT available (the token needs youtube.readonly or the Analytics scope: `shorts auth`)'}.", ""]
 
     def row(h: dict) -> str:
         s = h["stats"]; m = h.get("metrics") or {}
@@ -80,9 +80,9 @@ def build_audit(cfg: Config, hist: list[dict]) -> str:
     if len(paced) >= 3:
         fast = [h for h in paced if h["metrics"]["pace_wpm"] > 165]
         if fast:
-            changes.append(f"{len(fast)} of {len(paced)} scored videos were read above 165 wpm; the budget is now 100 words at voice speed 0.9, watch whether hold improves.")
+            changes.append(f"{len(fast)} of {len(paced)} scored videos were read above 165 wpm; the budget is now 100 words at voice speed 0.8, watch whether hold improves.")
     if not has_hold:
-        changes.append("Add the YouTube Analytics scope (`uv run shorts auth --device`) so scores weight retention, not only views.")
+        changes.append("Retention is missing: check that the YouTube token carries youtube.readonly or the Analytics scope (`uv run shorts auth --device`) so scores weight retention, not only views.")
     while len(changes) < 3:
         changes.append("Not enough data for another evidence-based change; keep the format rotation and the two-a-day cadence.")
     lines += ["## Three changes for this week"] + [f"{i + 1}. {c}" for i, c in enumerate(changes[:3])] + [""]

@@ -47,6 +47,13 @@ def fetch_uploads(cfg: Config, max_items: int = 50) -> list[dict]:
     return out
 
 
+def _covers_analytics(scopes) -> bool:
+    """reports.query accepts yt-analytics.readonly, and also youtube.readonly or the full youtube scope
+    (checked against the live API on 2026-11-11 with an upload + readonly token). Upload-only tokens do not."""
+    names = {str(sc).rstrip("/").rsplit("/", 1)[-1] for sc in (scopes or [])}
+    return bool(names & {"yt-analytics.readonly", "yt-analytics-monetary.readonly", "youtube.readonly", "youtube", "youtubepartner"})
+
+
 def fetch_analytics(cfg: Config, video_ids: list[str], days: int = 45) -> dict[str, dict]:
     """Per-video retention from the YouTube Analytics API. Returns {} when the token does not cover analytics."""
     if not video_ids:
@@ -55,8 +62,8 @@ def fetch_analytics(cfg: Config, video_ids: list[str], days: int = 45) -> dict[s
         from googleapiclient.discovery import build
         from .youtube import credentials
         creds = credentials(cfg)
-        if not any("yt-analytics" in sc for sc in (creds.scopes or [])):
-            log.info("analytics skipped: the token does not include YouTube Analytics (re-run `shorts auth` to add it)")
+        if not _covers_analytics(creds.scopes):
+            log.info("analytics skipped: the token has no scope the Analytics API accepts (re-run `shorts auth` to add one)")
             return {}
         ya = build("youtubeAnalytics", "v2", credentials=creds, cache_discovery=False)
         end = dt.date.today(); start = end - dt.timedelta(days=days)

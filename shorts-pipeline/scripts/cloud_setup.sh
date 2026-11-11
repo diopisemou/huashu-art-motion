@@ -65,7 +65,8 @@ raw = os.environ.get("YT_TOKEN_JSON")
 if raw:
     try:
         sc = json.loads(raw).get("scopes") or []
-        print("youtube analytics scope:", "yes" if any("yt-analytics" in s for s in sc) else "NO (retention unavailable)")
+        ok = {s.rstrip("/").rsplit("/", 1)[-1] for s in sc} & {"yt-analytics.readonly", "yt-analytics-monetary.readonly", "youtube.readonly", "youtube", "youtubepartner"}
+        print("youtube retention (Analytics API):", "yes" if ok else "NO (token has no scope the Analytics API accepts)")
     except Exception:
         print("YT_TOKEN_JSON is not valid JSON")
 key = os.environ.get("POSTIZ_API_KEY")
