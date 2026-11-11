@@ -4,7 +4,7 @@
 # Idempotent. Prints a status block at the end. Usage:
 #   bash /home/user/sp-branch/shorts-pipeline/scripts/cloud_setup.sh
 # (first time, when /home/user/sp-branch does not exist yet:
-#   git -C /home/user/huashu-art-motion fetch origin shorts-pipeline
+#   git -C /home/user/huashu-art-motion fetch origin "+refs/heads/shorts-pipeline:refs/remotes/origin/shorts-pipeline"
 #   git -C /home/user/huashu-art-motion worktree add --detach /home/user/sp-branch origin/shorts-pipeline)
 set -euo pipefail
 ENGINE=${ENGINE:-/home/user/huashu-art-motion}   # checkout of the repository
@@ -13,7 +13,7 @@ WORK=${WORK:-/home/user/shorts-pipeline}         # working copy the builds run i
 export SSL_CERT_FILE=${SSL_CERT_FILE:-/root/.ccr/ca-bundle.crt}
 
 echo "== 1. branch worktree"
-git -C "$ENGINE" fetch -q origin shorts-pipeline
+git -C "$ENGINE" fetch -q origin "+refs/heads/shorts-pipeline:refs/remotes/origin/shorts-pipeline"
 if [ ! -d "$BRANCH_WT" ]; then
   git -C "$ENGINE" worktree add -q --detach "$BRANCH_WT" origin/shorts-pipeline
 else

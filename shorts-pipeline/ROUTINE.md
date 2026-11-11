@@ -6,8 +6,9 @@ state so the next run knows what was made. Everything a run needs to remember li
 `diopisemou/huashu-art-motion`: `shorts-pipeline/state/history.json` (one entry per build, with a `note` written by
 the run that made it), `shorts-pipeline/topics.yaml` (the queue) and `shorts-pipeline/state/audit.md` (weekly audit).
 
-Two Routines call this file each day: MORNING (06:07 America/Toronto) and AFTERNOON (15:07). The prompt that started
-you says which one you are.
+Two Routines run each day: MORNING (06:07 America/Toronto) and AFTERNOON (15:07). Each one has a small launcher
+session create a fresh worker session with this repository attached (that is what lets the worker push), and the
+worker follows this file. The prompt that started you says which run you are.
 
 ## What Bachir approved, and the limits
 
@@ -22,11 +23,12 @@ you says which one you are.
 
 ## 1. Setup
 
-The repository should be checked out at `/home/user/huashu-art-motion`. If it is not, attach it with the `add_repo`
-tool (owner `diopisemou`, repo `huashu-art-motion`, access `push`) and clone it there.
+The repository is attached to your session and checked out at `/home/user/huashu-art-motion`. If it is missing,
+`git clone https://github.com/diopisemou/huashu-art-motion /home/user/huashu-art-motion` works for reading (the
+repository is public), but a session without the repository attached cannot push: say so in the report.
 
 ```bash
-git -C /home/user/huashu-art-motion fetch origin shorts-pipeline
+git -C /home/user/huashu-art-motion fetch origin "+refs/heads/shorts-pipeline:refs/remotes/origin/shorts-pipeline"
 [ -d /home/user/sp-branch ] || git -C /home/user/huashu-art-motion worktree add --detach /home/user/sp-branch origin/shorts-pipeline
 bash /home/user/sp-branch/shorts-pipeline/scripts/cloud_setup.sh
 cd /home/user/shorts-pipeline && export HUASHU_DIR=/home/user/sp-branch SSL_CERT_FILE=/root/.ccr/ca-bundle.crt
@@ -173,7 +175,7 @@ block, how many topics are left, and what still needs Bachir. Remind him to past
    audit, and `config.yaml` only if you changed it):
 
 ```bash
-cd /home/user/sp-branch && git fetch -q origin shorts-pipeline && git checkout -q --detach origin/shorts-pipeline
+cd /home/user/sp-branch && git fetch -q origin "+refs/heads/shorts-pipeline:refs/remotes/origin/shorts-pipeline" && git checkout -q --detach origin/shorts-pipeline
 cp /home/user/shorts-pipeline/state/history.json shorts-pipeline/state/history.json
 cp /home/user/shorts-pipeline/topics.yaml shorts-pipeline/topics.yaml
 git add shorts-pipeline/state/history.json shorts-pipeline/topics.yaml
@@ -181,12 +183,13 @@ git commit -q -m "state: <date> <am|pm> Short published (<topic>, <format>)" -m 
 git push origin HEAD:refs/heads/shorts-pipeline
 ```
 
-   If the push is refused, push the same files with the GitHub `push_files` tool instead (owner `diopisemou`, repo
-   `huashu-art-motion`, branch `shorts-pipeline`, paths prefixed with `shorts-pipeline/`), passing each file's exact
-   content. Either way verify: after `git fetch origin shorts-pipeline`,
+   If the push is refused, push the same files with the GitHub `push_files` tool when you have it (owner
+   `diopisemou`, repo `huashu-art-motion`, branch `shorts-pipeline`, paths prefixed with `shorts-pipeline/`),
+   passing each file's exact content. Either way verify: after fetching the branch again,
    `git ls-tree origin/shorts-pipeline shorts-pipeline/state/history.json shorts-pipeline/topics.yaml` must show the
-   same blob SHAs as `git hash-object` of the local files. A run whose state did not reach the branch makes the next
-   run repeat the topic, so say so loudly if it failed.
+   same blob SHAs as `git hash-object` of the local files. If neither way works, send `state/history.json` and
+   `topics.yaml` to Bachir with SendUserFile and say at the top of the report that the state did NOT reach the
+   branch: the next run will repeat this topic unless he pushes them.
 
 ## 10. If something blocks you
 
