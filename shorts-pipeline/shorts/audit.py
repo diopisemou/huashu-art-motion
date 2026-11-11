@@ -26,11 +26,14 @@ def _group(rows: list[dict], key: str) -> dict[str, dict]:
         rel = h["stats"].get("rel")
         if rel is None:
             continue
-        g = out.setdefault(h.get(key) or "?", {"rels": [], "pcts": [], "n": 0})
+        g = out.setdefault(h.get(key) or "?", {"rels": [], "pcts": [], "n": 0, "ev": 0, "wv": 0})
         g["rels"].append(rel); g["n"] += 1
+        if h["stats"].get("engaged_views") is not None and h["stats"].get("window_views"):
+            g["ev"] += int(h["stats"]["engaged_views"]); g["wv"] += int(h["stats"]["window_views"])
         if h["stats"].get("avg_view_pct") is not None:
             g["pcts"].append(float(h["stats"]["avg_view_pct"]))
-    return {k: {"n": v["n"], "median_rel": _median(v["rels"]), "median_hold": _median(v["pcts"])} for k, v in out.items()}
+    return {k: {"n": v["n"], "median_rel": _median(v["rels"]), "median_hold": _median(v["pcts"]),
+                "stay": round(100 * v["ev"] / v["wv"]) if v["wv"] else None} for k, v in out.items()}
 
 
 def build_audit(cfg: Config, hist: list[dict]) -> str:
@@ -58,9 +61,10 @@ def build_audit(cfg: Config, hist: list[dict]) -> str:
     lines += ["## Worst"] + head + [row(h) for h in ranked[::-1][:3]] + [""]
     for key, label in (("format", "By format"), ("grammar", "By grammar")):
         g = _group(scored, key)
-        lines += [f"## {label} (median score; 1.0 = a typical video for this channel)", "| group | n | median score | median hold |", "|---|---|---|---|"]
+        lines += [f"## {label} (median score; 1.0 = a typical video for this channel)", "| group | n | median score | median hold | stayed |", "|---|---|---|---|---|"]
         for k, v in sorted(g.items(), key=lambda kv: -(kv[1]["median_rel"] or 0)):
-            lines.append(f"| {k} | {v['n']} | {v['median_rel']} | {v['median_hold'] if v['median_hold'] is not None else '-'} |")
+            lines.append(f"| {k} | {v['n']} | {v['median_rel']} | {v['median_hold'] if v['median_hold'] is not None else '-'} | "
+                         f"{str(v['stay']) + '%' if v['stay'] is not None else '-'} |")
         lines.append("")
     # correlations worth a sentence (only with 3+ rows per bucket; the method is correlational, never causal)
     changes: list[str] = []
@@ -75,7 +79,8 @@ def build_audit(cfg: Config, hist: list[dict]) -> str:
     other = [h for h in scored if h not in explained]
     if len(explained) >= 2 and len(other) >= 2:
         a, b = _median([h["stats"]["rel"] for h in explained]), _median([h["stats"]["rel"] for h in other])
-        changes.append(f"Titles shaped 'X explained in 60 seconds' score {a} vs {b} for the rest; keep the shape where the topic allows.")
+        changes.append(f"Titles shaped 'X explained in 60 seconds' score {a} vs {b} for the rest ({len(explained)} vs {len(other)} videos). "
+                       "Since Nov 11 titles name the tool and the thing instead; compare the two groups before going back.")
     paced = [h for h in scored if (h.get("metrics") or {}).get("pace_wpm")]
     if len(paced) >= 3:
         fast = [h for h in paced if h["metrics"]["pace_wpm"] > 165]

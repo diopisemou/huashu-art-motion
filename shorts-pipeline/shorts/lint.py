@@ -36,6 +36,9 @@ def lint_plan(plan: ShortPlan, cfg: Config) -> tuple[list[str], list[str]]:
     elif wc > max_words:
         warnings.append(f"narration is {wc} words; budget {max_words}")
 
+    if plan.grammar not in cfg.grammars:
+        errors.append(f"grammar {plan.grammar} is not enabled in config.yaml (video.grammars: {', '.join(cfg.grammars)})")
+
     # titles and descriptions
     max_title = int(cfg.get("lint.max_title_chars", 60))
     if len(plan.title) > max_title:

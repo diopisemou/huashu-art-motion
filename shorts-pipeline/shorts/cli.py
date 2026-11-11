@@ -459,9 +459,11 @@ def main(argv: list[str] | None = None) -> int:
               "- `question`: one specific question the viewer can answer in a comment (their tool, their rule, their number); spoken before the outro, pinned under the video.\n"
               "- Each cue's `narration` is exactly what the voice says while that cue is on screen (1-2 short sentences). Put a re-hook (a turn, a 'but') near the middle.\n"
               "- On-screen text is a second channel (the term, the step name, the number, the consequence); it never repeats the words spoken over it.\n"
-              f"- Narration <= {cfg.get('llm.max_words', 100)} words total: it is read at 125-150 wpm, about 40 s. Fewer words beat a faster voice.\n"
+              f"- Narration <= {cfg.get('llm.max_words', 100)} words total, read at 125-150 wpm. The fix must be on screen before second 10. Fewer words beat a faster voice.\n"
               "- Concrete over abstract; no filler; honest voice. Every real number needs a `facts` entry with a source URL, or leave the number out.\n"
-              "- Title <= 60 chars with the topic in the first three words, sentence case, no hashtags ('X explained in 60 seconds' performs best here).\n"
+              "- Title <= 60 chars, sentence case, no hashtags. The first three words name the tool and the thing ('Claude Code plan mode: ...'); the rest is the\n"
+              "  mistake or the payoff. No fixed template: 'explained in 60 seconds' at most once in five titles.\n"
+              "- A command, key or flag is shown on screen exactly as typed, and comes only from the topic line or the docs page it links. Never invent one.\n"
               "- Description: first sentence <= 125 chars and standing alone; nothing the video does not say. Tags lowercase, no '#'; the first 3-5 are the hashtags.\n"
               "- On-screen text must fit a phone: y5 main text 1-2 words / <= 13 chars, subs <= 7 words; other grammars <= 9 words per line.\n"
               "- `uv run shorts lint --plan plan.json` before building: errors block, warnings are the bar.")

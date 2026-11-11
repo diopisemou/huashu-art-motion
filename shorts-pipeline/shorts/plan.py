@@ -136,7 +136,7 @@ Language of narration and on-screen text: {language}
 Closing line (use it as `outro`, you may adapt the wording slightly): {cta}
 
 Format rules
-- Total narration (all cue narrations + question + outro) <= {max_words} words, read at 125-150 words per minute: about 40 seconds.
+- Total narration (all cue narrations + question + outro) <= {max_words} words, read at 125-150 words per minute. The fix must be on screen before second 10.
 - Cue 1 is a `title` cue whose narration is the hook: one sentence that a viewer could disagree with, or a specific mistake they make, no "In this video".
   Never a definition ("X is...", "X explained"): the phrase "explained in 60 seconds" belongs in the title only. Write three hooks from different
   formulas (a claim, a mistake, a number, a contrast, the viewer's own question), score each 1-10 for specificity, curiosity and honesty, keep the best;
@@ -149,7 +149,7 @@ Format rules
 - Concrete over abstract: a step, a rule, a number, a before/after. No filler, no "let's dive in", no emojis.
 - Numbers: every real figure needs a `facts` entry ({{claim, source URL}}) and the source named in `description`; otherwise write the idea without a number or mark the chart `badge: "illustrative"`. Never invent testimonials, results, prices or people.
 - Honest voice: it is fine to say "we" and "I think"; never fabricate testimonials, earnings or results.
-- Title <= 60 characters, the topic in the first three words, sentence case, no hashtags (the pipeline appends #Shorts). "X explained in 60 seconds" is this channel's best-performing shape.
+- Title <= 60 characters, sentence case, no hashtags (the pipeline appends #Shorts). The first three words name the tool and the thing ("Claude Code plan mode: ..."); the rest is the mistake or the payoff. No fixed template: "explained in 60 seconds" at most once in five titles.
 - Description: the first sentence (<= 125 characters) must stand alone before "more"; 2-4 sentences, nothing the video does not say. Tags lowercase, no '#'; the first 3-5 are the topical ones used as hashtags.
 - On-screen text must fit a phone: y5 main text 1-2 words and <= 13 characters (it is set huge), subs <= 7 words; other grammars <= 9 words per line.
 - Choose the grammar that fits the idea; default to y5_kinetic_type when unsure. Only use t3_finance_chart with real, sourced numbers.
@@ -170,7 +170,7 @@ FORMAT_RULES = {
         "that tell this beat of the story or argument; pick styles whose mood matches the beat and never reuse a style; no other cue kinds. "
         "The outro is spoken over a closing card.\nB-roll styles: {styles}"
     ),
-    "explainer": ("Set format='explainer' and pick y3_whiteboard, t1_3b1b or y1_kurzgesagt. 5-7 cues following that grammar's menu, in this order: "
+    "explainer": ("Set format='explainer' and pick one of the allowed grammars (t1_3b1b by default; y1_kurzgesagt only for a system with parts). 5-7 cues following that grammar's menu, in this order: "
                   "hook, the familiar world (what the viewer already does), the disruption (what goes wrong), the mechanism (why), the discovery (the fix), "
                   "the consequence (what changes), recap in one line. Cue 2 (the familiar world) is a VISUAL cue (y3 draw, t1 equation or line) so the film "
                   "opens on a drawing while the title is still being written. Labels name the mechanism or the step; narration explains it."),

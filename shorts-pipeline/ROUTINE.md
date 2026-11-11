@@ -66,7 +66,17 @@ Before writing, read the `note` of the last six entries of `state/history.json`:
 
 ## 4. Write `plan.json` yourself
 
-The audience is people building software with AI coding agents. Topics are claims and mistakes, not definitions.
+The audience is people building software with AI coding agents. Since Nov 11 every Short shows ONE named feature,
+command or habit of a real tool (Claude Code first): the mistake, the exact command or key, what changes. Why: in the
+first 41 Shorts only 26 % of the people who were shown one stayed, nobody commented, and the only search terms that
+fit the channel were "git worktrees" and "claude skills"; the best-held Short was the one about a named tool feature
+(Git worktrees, 72 % viewed).
+
+- **Facts.** A command, key, flag or file name is shown on screen exactly as typed, and it comes only from the topic
+  line or from the docs page the topic links: fetch that page before writing and check each one. If the page cannot
+  be fetched, use only what the topic line states. Never invent a flag, a menu or an output. Do not show logos.
+- **Payoff by second 10.** Viewers watched a median 12 s whatever the length. The fix (the command, the key) is on
+  screen and spoken before second 10; the rest shows what changes.
 
 - **Hook** (cue 1 narration): one sentence a viewer could disagree with, or a specific mistake they make. Never a
   definition, never the word "explained" (that shape stays in the title). Write three hooks from different formulas
@@ -79,15 +89,16 @@ The audience is people building software with AI coding agents. Topics are claim
   <= 14 words, ending with "?". It is spoken before the outro and heads the pinned comment.
 - **Second channel.** Every label and sub names the term, the step or the consequence. It never repeats the words
   spoken over it (lint checks exact word echoes between a cue's text and its own narration).
-- **Budget.** Narration <= 100 words including the question and the outro. Put a re-hook (a turn, a "but") near the
+- **Budget.** Narration <= 80 words including the question and the outro. Put a re-hook (a turn, a "but") near the
   middle. Explainers follow: hook, familiar world (visual cue), disruption, mechanism, discovery, consequence,
   one-line recap.
-- **Title** <= 60 characters, topic in the first three words. "X explained in 60 seconds" is the channel's best
-  title shape (1.13x vs 0.41x for the rest in the Nov 11 audit): use it whenever the topic fits. First sentence of
+- **Title** <= 60 characters. The first three words name the tool and the thing ("Claude Code plan mode: ...",
+  "Claude Code /clear: ..."); the rest is the mistake or the payoff. No fixed template: 37 of the first 41 titles
+  ended "explained in 60 seconds", so use that ending at most once in five titles. First sentence of
   the description <= 125 characters and standing alone. Any real number needs a `facts` entry with a source URL, or
   leave the number out. Never reuse a topic or title already in `history.json`.
-- **Explainer grammar.** Prefer `t1_3b1b` (1.66x in the Nov 11 audit). `y3_whiteboard` scored 0.61x: use it only
-  when the idea is a reasoning chain that needs icons. `y1_kurzgesagt` only for a system with parts, and preview it
+- **Explainer grammar.** Use `t1_3b1b` (the best-held style: 38 % stayed). `y3_whiteboard` is switched off in
+  `config.yaml` and lint rejects it. `y1_kurzgesagt` only for a system with parts, and preview it
   first with `uv run shorts preview --plan plan.json --times 1,8,16,24` and look at the stills.
 - **hook_broll styles.** Use cue 1 plus 3-4 `broll` cues, each with a distinct style, preferring styles not used in
   the last two weeks. Avoid, because they put lettering or clutter under the captions: `13_pop`, `11_cubism`,

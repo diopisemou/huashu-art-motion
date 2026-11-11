@@ -71,7 +71,7 @@ def fetch_analytics(cfg: Config, video_ids: list[str], days: int = 45) -> dict[s
         for k in range(0, len(video_ids), 200):
             chunk = video_ids[k:k + 200]
             r = ya.reports().query(ids="channel==MINE", startDate=start.isoformat(), endDate=end.isoformat(),
-                                   metrics="views,averageViewPercentage,averageViewDuration,likes,shares,subscribersGained",
+                                   metrics="views,engagedViews,averageViewPercentage,averageViewDuration,likes,shares,subscribersGained",
                                    dimensions="video", filters="video==" + ",".join(chunk), maxResults=200).execute()
             cols = [c["name"] for c in r.get("columnHeaders", [])]
             for row in r.get("rows", []):
@@ -101,7 +101,9 @@ def link_and_score(cfg: Config, uploads: list[dict]) -> dict:
         a = ana.get(h.get("video_id") or "")
         if a and h.get("stats"):
             h["stats"].update({"avg_view_pct": a.get("averageViewPercentage"), "avg_view_s": a.get("averageViewDuration"),
-                               "shares": a.get("shares"), "subs_gained": a.get("subscribersGained")}); changed = True
+                               "shares": a.get("shares"), "subs_gained": a.get("subscribersGained"),
+                               # stay rate = engaged_views / window_views: the share of people shown the Short who did not swipe away
+                               "engaged_views": a.get("engagedViews"), "window_views": a.get("views")}); changed = True
     scores = score_formats(hist)          # also writes stats.rel per video
     write_json(history_path(cfg), hist)
     write_json(cfg.state_dir / "stats.json", {"updated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "scores": scores})
