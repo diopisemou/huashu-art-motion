@@ -8,6 +8,7 @@ A format is the shape of the short. The pipeline picks one each day, never the s
 | `list` | numbered kinetic-type pages: one huge word per idea, coloured key word in the sub line, progress track | `y5_kinetic_type` | ~1 min |
 | `hook_broll` | hook card → 3–4 story beats over moving painted scenes (Hopper diner, Van Gogh room, Bauhaus, 8-bit…) each with a big caption → CTA card | huashu gallery scenes + `y5` cards | 5–12 min |
 | `explainer` | drawn step by step: 3Blue1Brown curve/formula or Kurzgesagt system diagram (whiteboard is switched off since 2026-11-11) | `t1_3b1b`, `y1_kurzgesagt` | ~1–2 min |
+| `terminal` | a terminal window under a headline: the command or prompt is typed, output arrives, keys are pressed as keycaps, the status bar changes; told as before / after for one named tool feature (added 2026-11-11, weight 0 until approved) | `t4_terminal` | ~1 min |
 | `keynote` | launch-style cards with icons and one big number | `t2_keynote_ui` | ~1 min |
 | `data` | one sourced chart with a call-out (only with real numbers; otherwise the plan falls back to `list`) | `t3_finance_chart` | ~1 min |
 

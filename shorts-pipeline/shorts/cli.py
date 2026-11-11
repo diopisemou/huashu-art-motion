@@ -313,11 +313,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--force", action="store_true", help="publish even if QA flagged problems")
     p.add_argument("--out-name", help="output folder name under out/ (default <date>-<slug>)")
     p.add_argument("--keep-topic", action="store_true", help="do not consume the topic from the queue")
-    p.add_argument("--format", choices=["list", "hook_broll", "explainer", "keynote", "data"], help="force today's format")
+    p.add_argument("--format", choices=["list", "hook_broll", "explainer", "keynote", "data", "terminal"], help="force today's format")
 
     p = sub.add_parser("plan", help="ask Claude for a plan.json only")
     p.add_argument("--topic", required=True)
-    p.add_argument("--format", default=None, choices=["list", "hook_broll", "explainer", "keynote", "data"])
+    p.add_argument("--format", default=None, choices=["list", "hook_broll", "explainer", "keynote", "data", "terminal"])
     p.add_argument("--out", type=Path, default=Path("plan.json"))
 
     sub.add_parser("stats", help="pull YouTube view counts, link them to built shorts by title, score the formats")
@@ -333,7 +333,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--record", action="store_true", help="write the build to state/history.json and consume the topic from topics.yaml if it is the next one")
 
     p = sub.add_parser("next", help="print what today's short should be (format, topic, rules, JSON schema) so a Claude session can write plan.json itself")
-    p.add_argument("--format", choices=["list", "hook_broll", "explainer", "keynote", "data"])
+    p.add_argument("--format", choices=["list", "hook_broll", "explainer", "keynote", "data", "terminal"])
     p.add_argument("--topic")
 
     p = sub.add_parser("publish", help="upload an already built out/<dir> to YouTube")

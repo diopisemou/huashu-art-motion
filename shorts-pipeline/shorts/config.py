@@ -7,7 +7,7 @@ from typing import Any
 
 import yaml
 
-DEFAULT_GRAMMARS = ["y5_kinetic_type", "y3_whiteboard", "t1_3b1b", "y1_kurzgesagt", "t2_keynote_ui", "t3_finance_chart"]
+DEFAULT_GRAMMARS = ["y5_kinetic_type", "y3_whiteboard", "t1_3b1b", "y1_kurzgesagt", "t2_keynote_ui", "t3_finance_chart", "t4_terminal"]
 
 
 @dataclass

@@ -54,6 +54,11 @@ def _cue_to_spec(plan: ShortPlan, c: Cue, at: float) -> dict | None:
         if c.kind == "card" and c.icon: data["icon"] = c.icon if c.icon in T2_ICONS else "bolt"
     elif g == "t3_finance_chart":
         if c.kind == "highlight" and c.index is not None: data["index"] = c.index
+    elif g == "t4_terminal":
+        if c.label: data["label"] = c.label                      # status bar text from this cue on
+        if c.key: data["key"] = c.key                            # the word of the headline to tint
+        if c.kind == "highlight" and c.word: data["word"] = c.word
+        if c.kind == "out" and c.color: data["color"] = c.color
     if c.kind == "number":
         data.update({k: v for k, v in {"value": c.value, "prefix": c.prefix, "suffix": c.suffix, "decimals": c.decimals, "label": c.label}.items() if v is not None})
         if c.value is None:
@@ -74,6 +79,8 @@ def _plan_data(plan: ShortPlan) -> dict:
         for k in ("title", "subtitle", "eyebrow"):
             if getattr(d, k): out[k] = getattr(d, k)
         out.setdefault("title", plan.title)
+    elif g == "t4_terminal":
+        out["title"] = d.title or "terminal"
     elif g == "t3_finance_chart":
         out["title"] = d.title or plan.title
         if d.unit: out["unit"] = d.unit
@@ -100,7 +107,8 @@ def build_spec(cfg: Config, plan: ShortPlan, voice: Voice, out_dir: Path, end_at
         at = 0.0 if i == 0 else lead + voice.time_at_char(off)
         if c.kind == "number":
             at = max(at, 0.9)  # the number needs 0.7-0.9 s to roll in before it lands
-        if i == 1 and c.kind in ("draw", "line", "equation") and plan.grammar in ("y3_whiteboard", "t1_3b1b") and bool(cfg.get("formats.cold_open", True)):
+        cold = (c.kind in ("draw", "line", "equation") and plan.grammar in ("y3_whiteboard", "t1_3b1b")) or (c.kind in ("cmd", "prompt", "key") and plan.grammar == "t4_terminal")
+        if i == 1 and cold and bool(cfg.get("formats.cold_open", True)):
             at = min(at, float(cfg.get("formats.cold_open_s", 1.2)))   # cold open: the first drawing starts while the title is still being written
         at = max(at, last_at + MIN_GAP) if i > 0 else at
         q = _cue_to_spec(plan, c, at)

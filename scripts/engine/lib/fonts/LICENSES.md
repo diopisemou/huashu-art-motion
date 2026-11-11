@@ -18,6 +18,7 @@ The fonts in this directory are NOT covered by the repository's MIT license. Eac
 | `GochiHand-400.woff` | Gochi Hand | © 2011 Huerta Tipográfica，Reserved Font Names "Gochi" and "Gochi Hand" | Google Fonts |
 | `IMFellEnglish-400.woff` `-400i` | IM FELL English | © 2007 Igino Marini，Reserved Font Names "IM FELL English Roman/Italic" | Google Fonts |
 | `Inter-var.woff` | Inter | © 2016 The Inter Project Authors | github.com/rsms/inter |
+| `JetBrainsMono-400.ttf` `-700.ttf` | JetBrains Mono 2.304, unmodified TTF (OFL 1.1 upstream; the Debian package it was copied from lists Apache-2.0; both allow redistribution) | © 2020 The JetBrains Mono Project Authors | github.com/JetBrains/JetBrainsMono |
 | `JosefinSans-700.woff` | Josefin Sans | © 2010 The Josefin Sans Project Authors，Reserved Font Name "Josefin Sans" | Google Fonts |
 | `Kalam-700.woff` | Kalam | © 2014 Indian Type Foundry | Google Fonts |
 | `LibreBaskerville-400.woff` `-700` | Libre Baskerville | © 2012 The Libre Baskerville Project Authors | Google Fonts |

@@ -100,6 +100,16 @@ fit the channel were "git worktrees" and "claude skills"; the best-held Short wa
 - **Explainer grammar.** Use `t1_3b1b` (the best-held style: 38 % stayed). `y3_whiteboard` is switched off in
   `config.yaml` and lint rejects it. `y1_kurzgesagt` only for a system with parts, and preview it
   first with `uv run shorts preview --plan plan.json --times 1,8,16,24` and look at the stills.
+- **Terminal format** (`format: terminal`, grammar `t4_terminal`; off in `config.yaml` until Bachir approves the
+  samples, then the chooser picks it like any other). The film is a terminal window under a headline. Cue 1 `title`
+  is the hook as a headline (<= 6 words, `key` tints one word). Cue 2 is a `cmd`, `prompt` or `key` so typing starts
+  within the first second. Tell it as before / after: the mistake as the viewer types it today and what comes back,
+  `clear`, the fix (the exact command or key), what comes back now, one `highlight` on the words that prove it.
+  `cmd` is typed after `$`, `prompt` after `>`; `out` rows are split on `\n` (<= 5 rows of <= 32 characters; a row
+  starting `+ ` or `- ` is a diff row, `✓` green, `✗` red, `#` dim); `key` takes `Shift+Tab` or `Esc Esc`; `sub` on
+  any cue is a new headline; `label` is the status bar text. Output rows are short and plausible, or `#` comments:
+  never a quoted real output, no versions, timings, token counts or costs. Say spoken forms in the narration
+  ("Shift Tab", "slash clear") and put the typed form on screen.
 - **hook_broll styles.** Use cue 1 plus 3-4 `broll` cues, each with a distinct style, preferring styles not used in
   the last two weeks. Avoid, because they put lettering or clutter under the captions: `13_pop`, `11_cubism`,
   `12_bauhaus`, `27_kirby`, `22_constructivism`, `14_8bit`; dense patterns `29_seurat`, `21_kusama`; pale scenes
@@ -133,7 +143,7 @@ text is cut off at an edge; a caption is unreadable against its background; QA l
 readable: the caption burned over the yellow end card; the character cropped at the right edge of `hook_broll`
 scenes; headlines sitting over artwork; the last beat or last card holding for the question; `y5` title card and
 ghost numerals; `t1` equation caught mid-write or sparse early frames; `y3` pen caught mid-stroke; `t2` opening on
-its title card.
+its title card; `t4` a command caught half typed, an empty window in the first second, or the screen mid-wipe.
 
 To rebuild: remove the unpublished last entry from `state/history.json`, put the topic line back at the head of
 `topics.yaml`, move the first build directory out of `out/` into the scratchpad, change the plan (usually one

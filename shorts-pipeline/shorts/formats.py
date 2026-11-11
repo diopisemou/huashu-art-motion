@@ -24,6 +24,10 @@ FORMATS: dict[str, dict] = {
         "grammars": ["y3_whiteboard", "t1_3b1b", "y1_kurzgesagt"],
         "brief": "A why/how explanation drawn step by step: whiteboard (reasoning chain), 3Blue1Brown (mechanism, curve, formula) or Kurzgesagt (system with parts).",
     },
+    "terminal": {
+        "grammars": ["t4_terminal"],
+        "brief": "Show the screen: a terminal window where the command or prompt is typed and the result arrives, told as before/after for one named tool feature.",
+    },
     "keynote": {
         "grammars": ["t2_keynote_ui"],
         "brief": "Product-launch cards: title, three feature/tool cards with icons, one big number.",

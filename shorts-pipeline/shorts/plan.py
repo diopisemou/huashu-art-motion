@@ -11,8 +11,9 @@ from .config import Config
 
 log = logging.getLogger("shorts.plan")
 
-Grammar = Literal["y5_kinetic_type", "y3_whiteboard", "t1_3b1b", "y1_kurzgesagt", "t2_keynote_ui", "t3_finance_chart"]
-Kind = Literal["title", "point", "number", "highlight", "draw", "equation", "line", "enter", "card", "bar", "broll"]
+Grammar = Literal["y5_kinetic_type", "y3_whiteboard", "t1_3b1b", "y1_kurzgesagt", "t2_keynote_ui", "t3_finance_chart", "t4_terminal"]
+Kind = Literal["title", "point", "number", "highlight", "draw", "equation", "line", "enter", "card", "bar", "broll", "cmd", "prompt", "out", "key", "clear"]
+TERMINAL_KINDS = ("cmd", "prompt", "out", "key", "clear")
 
 # Which cue kinds each grammar understands (anything else is dropped at spec time).
 ALLOWED_KINDS: dict[str, set[str]] = {
@@ -22,6 +23,7 @@ ALLOWED_KINDS: dict[str, set[str]] = {
     "y1_kurzgesagt": {"title", "point", "highlight", "enter"},
     "t2_keynote_ui": {"title", "card", "number"},
     "t3_finance_chart": {"title", "bar", "line", "highlight", "number"},
+    "t4_terminal": {"title", "cmd", "prompt", "out", "key", "clear", "highlight"},
 }
 Y3_ICONS = "person cat network doc chat bulb check cross screen stack gear target clock chart".split()
 T2_ICONS = "wave memory agent clock phone layers chart code check play bolt lock".split()
@@ -54,9 +56,9 @@ class PlanData(BaseModel):
 class Cue(BaseModel):
     kind: Kind
     narration: str = Field(..., description="Exactly what the voice says while this cue is on screen. 1-2 short sentences.")
-    text: Optional[str] = Field(None, description="Main on-screen words: 1-4 words for y5, a short sentence for y3/t1/y1.")
-    sub: Optional[str] = Field(None, description="Secondary line (y5 sub-sentence, t2 card caption).")
-    label: Optional[str] = Field(None, description="y5: small tag such as '01'")
+    text: Optional[str] = Field(None, description="Main on-screen words: 1-4 words for y5, a short sentence for y3/t1/y1. t4: the command, prompt, output or keys exactly as typed.")
+    sub: Optional[str] = Field(None, description="Secondary line (y5 sub-sentence, t2 card caption). t4: a new headline above the terminal from this cue on.")
+    label: Optional[str] = Field(None, description="y5: small tag such as '01'. t4: status bar text from this cue on.")
     key: Optional[str] = Field(None, description="y5: a word inside `sub` to colour")
     word: Optional[str] = Field(None, description="y5 highlight: a word inside the current main text")
     icon: Optional[str] = Field(None, description="y3 draw / t2 card icon name")
@@ -78,7 +80,7 @@ class Fact(BaseModel):
 class ShortPlan(BaseModel):
     topic: str
     language: str
-    format: str = Field("list", description="one of the channel's formats: list, hook_broll, explainer, keynote, data")
+    format: str = Field("list", description="one of the channel's formats: list, hook_broll, explainer, keynote, data, terminal")
     grammar: Grammar
     title: str = Field(..., description="YouTube title, <= 70 characters, no hashtags, no clickbait caps")
     description: str = Field(..., description="2-4 sentences. If any number is quoted, name its source here.")
@@ -121,6 +123,12 @@ Grammar menu (pick ONE; the whole short uses it):
   cues: title(text), equation(text like "loss = f(x)"), point(text <= 9 words), line(text = curve label, values = 4-8 numbers), highlight(index).
 - y1_kurzgesagt — flat, glowing system diagram: a center with satellite nodes. Good for "what's inside X".
   data.center = the centre name; data.flow = true when the nodes are steps. cues: title, point(text 1-3 words, 3-5 of them), highlight(index), enter(index, text = new centre).
+- t4_terminal — a terminal window under a headline: a command or a prompt is typed, output arrives, keys are pressed. For "show the screen" tool tips.
+  data.title = the window title (e.g. "~/app"). cues: title(text = the hook headline, <= 6 words; key = one word of it to tint),
+  cmd(text = a shell command, typed after `$`), prompt(text = what you type to the agent, typed after `>`; a "working" line runs until the next out),
+  out(text = output rows separated by \n, <= 5 rows of <= 32 characters; a row starting "+ " or "- " is a diff row, "✓" green, "✗"/"error" red, "#" dim, "!" warning),
+  key(text = keys such as "Shift+Tab" or "Esc Esc", pressed as keycaps), clear(wipes the screen), highlight(word = words inside a row on screen).
+  On any cue: sub = a new headline (the step name or the consequence, <= 6 words), label = status bar text from then on (e.g. "⏸ plan mode on").
 - t2_keynote_ui — product-launch cards with icons and big numbers. Good for "3 features / 3 tools".
   data.title/subtitle/eyebrow. cues: title, card(text <= 3 words, sub <= 8 words, icon in: %(t2)s), number(value, suffix, sub).
 - t3_finance_chart — one Economist-style bar or line chart. Only for a real, sourced dataset of 3-8 points.
@@ -174,6 +182,12 @@ FORMAT_RULES = {
                   "hook, the familiar world (what the viewer already does), the disruption (what goes wrong), the mechanism (why), the discovery (the fix), "
                   "the consequence (what changes), recap in one line. Cue 2 (the familiar world) is a VISUAL cue (y3 draw, t1 equation or line) so the film "
                   "opens on a drawing while the title is still being written. Labels name the mechanism or the step; narration explains it."),
+    "terminal": ("Set format='terminal', grammar='t4_terminal'. 6-9 cues that SHOW one feature of a real tool on a terminal: cue 1 `title` (the hook as a headline); "
+                 "cue 2 a `cmd`, `prompt` or `key` so something is typed or pressed within the first second; then the story as before/after: the mistake on screen "
+                 "(what the viewer types today and what comes back), `clear`, the fix (the exact command or key), what comes back now, and one `highlight` on the words that prove it. "
+                 "Every command, key, flag and file name is exactly as typed in the real tool and comes from the topic line or its docs page. Output rows are plausible and short, "
+                 "never a quoted real output: no version numbers, no timings, no token or cost figures. Give 3-4 cues a `sub` headline that names the step or the consequence. "
+                 "Narration may say the command while it is typed: that is the one place where the screen repeats the voice."),
     "keynote": "Set format='keynote', grammar='t2_keynote_ui'. Cues: title, three card cues with icons, one number cue.",
     "data": "Set format='data', grammar='t3_finance_chart' ONLY with a real dataset you can source in the description (data.series, data.source). If you cannot, set format='list' and write a list instead.",
 }

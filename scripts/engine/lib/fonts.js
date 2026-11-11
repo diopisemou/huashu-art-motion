@@ -50,6 +50,9 @@ window.FONT_FACES = [
   // 发布会 Inter（SF Pro 最接近的开源字）、财经 Roboto Condensed：可变字重，用 '600 220px "Inter"' 选字重
   {family:'Inter', url:'lib/fonts/Inter-var.woff', desc:{weight:'100 900'}},
   {family:'RobotoCondensed', url:'lib/fonts/RobotoCondensed-var.woff', desc:{weight:'100 900'}},
+  // terminal grammar (t4): JetBrains Mono, unmodified TTF (OFL 1.1)
+  {family:'JetBrainsMono-400', url:'lib/fonts/JetBrainsMono-400.ttf'},
+  {family:'JetBrainsMono-700', url:'lib/fonts/JetBrainsMono-700.ttf'},
   // 思源黑/宋（可变字重）：只含 3b1b/发布会/财经三支示范片用到的字（源文件未随仓库附带，换题目缺字时改用 PuHui-*，或下 Google Fonts 的 NotoSansSC[wght].ttf 重做子集）
   {family:'NotoSansSC', url:'lib/fonts/NotoSansSC-sub.woff', desc:{weight:'100 900'}},
   {family:'NotoSerifSC', url:'lib/fonts/NotoSerifSC-sub.woff', desc:{weight:'200 900'}},

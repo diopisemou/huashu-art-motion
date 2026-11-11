@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 
 from .config import Config
-from .plan import ShortPlan
+from .plan import TERMINAL_KINDS, ShortPlan
 
 _WORD = re.compile(r"[\w']+")
 
@@ -54,6 +54,8 @@ def lint_plan(plan: ShortPlan, cfg: Config) -> tuple[list[str], list[str]]:
             v = getattr(c, field, None)
             if not v:
                 continue
+            if field == "text" and c.kind in TERMINAL_KINDS:
+                continue                                         # a typed command is shown exactly as it is said
             nv = _norm(v)
             if len(nv.split()) >= 2 and nv in _norm(c.narration):
                 echoes.append(f"cue {i + 1} {field} '{v}'")
@@ -94,6 +96,48 @@ def lint_plan(plan: ShortPlan, cfg: Config) -> tuple[list[str], list[str]]:
             warnings.append("the hook opens like a definition; make it a claim someone could disagree with, or the viewer's own mistake")
     if plan.format == "explainer" and plan.grammar in ("y3_whiteboard", "t1_3b1b") and len(plan.cues) > 1 and plan.cues[1].kind not in ("draw", "line", "equation"):
         warnings.append(f"cue 2 is a `{plan.cues[1].kind}`: make it a draw/line/equation so the film opens on a drawing (cold open) instead of a bare title")
+    if plan.grammar == "t4_terminal":
+        kinds = [c.kind for c in plan.cues]
+        if len(plan.cues) > 1 and plan.cues[1].kind not in ("cmd", "prompt", "key"):
+            warnings.append(f"cue 2 is a `{plan.cues[1].kind}`: make it a cmd, prompt or key so something is typed within the first second")
+        if not any(k in ("cmd", "prompt", "key") for k in kinds[1:]):
+            errors.append("a terminal short needs at least one cmd, prompt or key cue")
+        if "highlight" not in kinds:
+            warnings.append("no highlight cue: box the words on screen that prove the point")
+        if sum(1 for c in plan.cues[1:] if c.sub) < 2:
+            warnings.append("fewer than two `sub` headlines after the hook: name the step or the consequence above the terminal")
+        on_screen = ""
+        for i, c in enumerate(plan.cues):
+            t = c.text or ""
+            if c.kind in ("cmd", "prompt"):
+                on_screen += "\n" + t
+                if not t.strip():
+                    errors.append(f"cue {i + 1} {c.kind} has no text")
+                elif len(t) > 60:
+                    warnings.append(f"cue {i + 1} {c.kind} is {len(t)} characters: it wraps to three rows on a phone; keep it under 60")
+            elif c.kind == "out":
+                on_screen += "\n" + t
+                rows = t.split("\n")
+                if len(rows) > 5:
+                    warnings.append(f"cue {i + 1} out has {len(rows)} rows; keep it to 5 so the typed line stays in view")
+                long = [r for r in rows if len(r) > 32]
+                if long:
+                    warnings.append(f"cue {i + 1} out has rows over 32 characters (they wrap): {long[0][:40]!r}")
+                if re.search(r"\d+(\.\d+)?\s?(ms|s|sec|tokens?|k tokens|%)\b|\$\s?\d|v\d+\.\d+", t):
+                    warnings.append(f"cue {i + 1} out shows a timing, cost, token count or version: invented figures read as real output; leave them out")
+            elif c.kind == "key" and not t.strip():
+                errors.append(f"cue {i + 1} key has no text (e.g. 'Shift+Tab')")
+            elif c.kind == "highlight":
+                if not c.word:
+                    warnings.append(f"cue {i + 1} highlight has no `word`: it will box the latest typed row")
+                elif c.word not in on_screen:
+                    warnings.append(f"cue {i + 1} highlight word {c.word!r} is not in any command or output before it")
+            if c.kind == "clear":
+                on_screen = ""
+            if c.sub and len(c.sub.split()) > 7:
+                warnings.append(f"cue {i + 1} sub headline is {len(c.sub.split())} words; keep it to 6")
+        if plan.cues and plan.cues[0].text and len(plan.cues[0].text.split()) > 7:
+            warnings.append("the hook headline is over 6 words")
     q = (getattr(plan, "question", "") or "").strip()
     if not q:
         warnings.append("no `question`: end with one specific question the viewer can answer in a comment (spoken before the outro, pinned under the video)")
