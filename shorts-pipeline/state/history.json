@@ -1152,5 +1152,24 @@
     },
     "url": "https://youtube.com/shorts/kDS4nwC99SY",
     "note": "built by the 06:07 Routine (fired 11:07Z), the second Short of the day after the 09:31Z catch-up; hook_broll cold open over 05_gothic (styles gothic/rubberhose/hopper/raytrace/monet, none used in the last week); lint clean, QA OK with no warnings (0 frozen, 140 wpm at voice speed 0.8, STT 0.92, the lowest match this month, probably the quoted test name, -14.0 LUFS); critic retold the topic exactly (a wish wearing a verb, vague scope means random damage, the unspoken checkout path breaks two days later, name one file and one command so the agent has a tripwire that turns red and stops it) but voted HOLD on the character cropped at the right edge in most beats and the headlines sitting over artwork, both standard hook_broll framing with every caption readable, plus the standard end-card caption; published without a rebuild; TikTok cross-post SKIPPED: no Postiz CLI in this container and the subscription is still lapsed (twenty-fifth miss, needs Bachir); the catch-up is-this-correct t1 explainer at 10 views in 90 min."
+  },
+  {
+    "date": "2026-11-12T12:53:39+00:00",
+    "topic": "Claude Code plan mode: letting it edit before you agree on the plan is how you get a diff you cannot review. Press Shift+Tab until the status bar shows 'plan mode on': it reads files and proposes a plan but makes no edits until you approve (docs: https://code.claude.com/docs/en/common-workflows)",
+    "title": "Claude Code plan mode: review the plan, not the diff",
+    "format": "terminal",
+    "grammar": "t4_terminal",
+    "duration": 27.57,
+    "qa_ok": true,
+    "video_id": null,
+    "out_dir": "out/2026-11-12-claude-code-plan-mode-review-the-plan-not-the-di",
+    "metrics": {
+      "words": 68,
+      "pace_wpm": 155.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "note": "built by the 06:07 Routine (fired 12:48Z, Thu); FIRST terminal-format Short (t4_terminal, cue 1 title, cue 2 key Shift+Tab, prompt, out, highlight, clear; facts from code.claude.com/docs/en/common-workflows: Shift+Tab, status bar '⏸ plan mode on'); lint clean, QA OK with no warnings (0 frozen, 155 wpm, STT 1.0, -14.0 LUFS, 27.6 s); critic retold the topic exactly but voted HOLD on the end-card caption over yellow, blank terminal after the clear cue, small grey comment row and captions split across frames, all standard for t4/end card with every caption readable, so no rebuild; NOT PUBLISHED: `uv run shorts publish` was denied by the auto-mode permission classifier ([Create Public Surface]); video_id null, needs Bachir to run `uv run shorts publish out/2026-11-12-claude-code-plan-mode-review-the-plan-not-the-di` or allow the command; Postiz still 401 'No subscription found' (cross-post skipped)."
   }
 ]
