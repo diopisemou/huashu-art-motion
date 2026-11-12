@@ -1,6 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Claude Code /clear: a third correction in the same session makes it worse, because it keeps re-reading two failed attempts. After two failed corrections run /clear and write one better prompt that folds
-  in what you learned (docs: https://code.claude.com/docs/en/best-practices)'
 - 'Claude Code Esc: you do not have to wait while it goes the wrong way. Esc stops it mid-action and keeps everything up to that point; /rewind, or Esc twice on an empty prompt, opens the rewind menu (docs:
   https://code.claude.com/docs/en/best-practices)'
 - 'Claude Code Stop hook: it says done while the typecheck still fails. A Stop hook runs your script whenever it tries to end its turn, and sends it back to work if the script exits with code 2 (docs: https://code.claude.com/docs/en/best-practices)'

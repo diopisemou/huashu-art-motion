@@ -1171,5 +1171,25 @@
       "lint_warnings": 0
     },
     "note": "built by the 06:07 Routine (fired 12:48Z, Thu); FIRST terminal-format Short (t4_terminal, cue 1 title, cue 2 key Shift+Tab, prompt, out, highlight, clear; facts from code.claude.com/docs/en/common-workflows: Shift+Tab, status bar '⏸ plan mode on'); lint clean, QA OK with no warnings (0 frozen, 155 wpm, STT 1.0, -14.0 LUFS, 27.6 s); critic retold the topic exactly but voted HOLD on the end-card caption over yellow, blank terminal after the clear cue, small grey comment row and captions split across frames, all standard for t4/end card with every caption readable, so no rebuild; NOT PUBLISHED: `uv run shorts publish` was denied by the auto-mode permission classifier ([Create Public Surface]); video_id null, needs Bachir to run `uv run shorts publish out/2026-11-12-claude-code-plan-mode-review-the-plan-not-the-di` or allow the command; Postiz still 401 'No subscription found' (cross-post skipped)."
+  },
+  {
+    "date": "2026-11-12T22:35:42+00:00",
+    "topic": "Claude Code /clear: a third correction in the same session makes it worse, because it keeps re-reading two failed attempts. After two failed corrections run /clear and write one better prompt that folds in what you learned (docs: https://code.claude.com/docs/en/best-practices)",
+    "title": "Claude Code /clear: skip the third correction",
+    "format": "hook_broll",
+    "grammar": "y5_kinetic_type",
+    "duration": 26.0,
+    "qa_ok": true,
+    "video_id": "ZVXl0bYY_Bs",
+    "out_dir": "out/2026-11-12-claude-code-clear-skip-the-third-correction",
+    "metrics": {
+      "words": 63,
+      "pace_wpm": 155.0,
+      "frozen_pct": 0.0,
+      "longest_still_s": 0.0,
+      "lint_warnings": 0
+    },
+    "url": "https://youtube.com/shorts/ZVXl0bYY_Bs",
+    "note": "built by the 15:07 Routine (fired 22:30Z), the second Short of the day; the 06:07 plan-mode terminal Short is still NOT published (its publish was denied by the classifier, media gone with that container; topic consumed, needs Bachir to rebuild or republish); hook_broll cold open over 34_shadowpuppet (styles shadowpuppet/klimt/haring/matisse); facts from code.claude.com/docs/en/best-practices (after two failed corrections run /clear and write a better prompt); lint clean, QA OK with no warnings (0 frozen, 155 wpm, STT 0.97, -14.5 LUFS, 26.0 s); critic retold the topic exactly but voted HOLD on the end card caption stacked over the CTA and fragment captions on the last beat, both standard, every caption readable, so no rebuild; published public, verified; cross-post SKIPPED: Postiz API 401 'No subscription found' (needs Bachir)."
   }
 ]
