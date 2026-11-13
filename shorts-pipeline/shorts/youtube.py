@@ -114,6 +114,27 @@ def credentials(cfg: Config):
     return creds
 
 
+def token_channel(cfg: Config, yt=None) -> dict:
+    """The channel the token uploads to: {"id", "title", "handle"}. The token decides the channel, not the config."""
+    from googleapiclient.discovery import build
+    yt = yt or build("youtube", "v3", credentials=credentials(cfg), cache_discovery=False)
+    items = yt.channels().list(part="snippet", mine=True).execute().get("items") or []
+    if not items:
+        return {"id": None, "title": None, "handle": None}
+    return {"id": items[0]["id"], "title": items[0]["snippet"].get("title"), "handle": items[0]["snippet"].get("customUrl")}
+
+
+def check_channel(cfg: Config, yt=None) -> dict:
+    """Refuse to go on when the token belongs to another channel than publish.channel_id (three Shorts went to the
+    wrong channel on Nov 12-13, 2026 after a token swap)."""
+    ch = token_channel(cfg, yt)
+    want = str(cfg.get("publish.channel_id", "") or "").strip()
+    if want and ch["id"] != want:
+        raise SystemExit(f"refusing to upload: the YouTube token belongs to channel '{ch['title']}' ({ch['handle']}, {ch['id']}), "
+                         f"but config.yaml publish.channel_id is {want}. Re-authorise with the right channel or change the config.")
+    return ch
+
+
 def upload(cfg: Config, video: Path, *, title: str, description: str, tags: list[str],
            privacy: str | None = None, publish_at: str | None = None, dry_run: bool = False) -> dict:
     from googleapiclient.discovery import build
@@ -142,6 +163,8 @@ def upload(cfg: Config, video: Path, *, title: str, description: str, tags: list
         return {"id": None, "dry_run": True, "body": body}
 
     yt = build("youtube", "v3", credentials=credentials(cfg), cache_discovery=False)
+    ch = check_channel(cfg, yt)
+    log.info("uploading to channel: %s (%s)", ch["title"], ch["handle"])
     media = MediaFileUpload(str(video), mimetype="video/mp4", chunksize=8 * 1024 * 1024, resumable=True)
     req = yt.videos().insert(part="snippet,status", body=body, media_body=media,
                              notifySubscribers=bool(cfg.get("publish.notify_subscribers", True)))

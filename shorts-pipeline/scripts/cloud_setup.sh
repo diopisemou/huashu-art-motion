@@ -86,4 +86,14 @@ built = [e.get("video_id") for e in d if e["date"].startswith(today)]
 print(f"history: {len(d)} entries; built today (UTC {today}): {len(built)} {built}")
 print("topics left:", sum(1 for l in open("topics.yaml") if l.startswith("- ")))
 PY
+if [ -n "${YT_TOKEN_JSON:-}" ]; then
+  uv run python - 2>/dev/null <<'PYCH' || echo "youtube channel: could not be read (token refresh or network)"
+import logging; logging.disable(logging.CRITICAL)
+from shorts.config import load_config
+from shorts.youtube import token_channel
+cfg = load_config(); ch = token_channel(cfg); want = str(cfg.get("publish.channel_id", "") or "")
+ok = "matches config" if not want or ch["id"] == want else f"WRONG CHANNEL: config expects {want}. Publish nothing and tell Bachir"
+print(f"youtube channel: {ch['title']} ({ch['handle']}) -> {ok}")
+PYCH
+fi
 echo "next: cd $WORK && export HUASHU_DIR=$BRANCH_WT SSL_CERT_FILE=$SSL_CERT_FILE"

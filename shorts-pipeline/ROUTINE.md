@@ -48,6 +48,11 @@ the pipeline falls back to edge-tts, which needs `export EDGE_TTS_PROXY=$HTTPS_P
 **Stop rule.** If the status block shows two Shorts already built today, build nothing: tell Bachir in one line and
 end the run.
 
+**Channel rule.** The status block prints the channel the YouTube token belongs to. Uploads must go to **Clawexa**
+(@clawexa, `publish.channel_id` in `config.yaml`). If the line says WRONG CHANNEL, build nothing, publish nothing and
+tell Bachir which channel the token belongs to. `shorts publish` also refuses by itself in that case; never change
+`publish.channel_id` to make an upload go through.
+
 ## 2. Monday audit (MORNING run on Mondays, America/Toronto)
 
 Run `uv run shorts audit` before anything else. It refreshes stats, writes `state/audit.md` and prints three changes
@@ -158,7 +163,7 @@ uv run shorts publish out/<dir>     # public; writes the video id into history a
 ```
 
 If the first attempt dies before any "upload" line (a connection reset on token refresh), retry once. Then verify
-with the YouTube API that the video is `public`:
+with the YouTube API that the video is `public` and on the channel Clawexa (name the channel in your report):
 
 ```bash
 uv run python -c "
@@ -167,7 +172,7 @@ from shorts.config import load_config
 from shorts.youtube import credentials
 yt = build('youtube', 'v3', credentials=credentials(load_config()))
 for v in yt.videos().list(part='snippet,status,statistics', id='<VIDEO_ID>').execute()['items']:
-    print(v['id'], v['status']['privacyStatus'], v['statistics'].get('viewCount'), v['snippet']['title'])"
+    print(v['id'], v['status']['privacyStatus'], v['snippet']['channelTitle'], v['statistics'].get('viewCount'), v['snippet']['title'])"
 ```
 
 Cross-posting: only when the setup status says `postiz api: OK` and the `postiz` CLI is installed. Then

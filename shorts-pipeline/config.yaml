@@ -1,7 +1,7 @@
 # shorts-pipeline configuration. Secrets live in the environment / .env, never here.
 
 channel:
-  name: "Bidew Builds"
+  name: "Clawexa"
   # The brief steers every script. Make it specific: who watches, what they get, what to avoid.
   brief: >
     Daily 20–35 second tips for people who build software with AI coding agents (Claude Code first, then Cursor and Codex).
@@ -70,6 +70,9 @@ voice:
 
 publish:
   privacy: public         # public | unlisted | private
+  # The channel every upload must go to: Clawexa (@clawexa). `shorts publish` refuses when the token in YT_TOKEN_JSON
+  # belongs to another channel. Set to "" to switch the check off.
+  channel_id: "UC8AxB4sR7HAYKrlTjebR2fA"
   category_id: "28"       # 28 = Science & Technology, 27 = Education, 22 = People & Blogs
   title_suffix: " #Shorts"
   tags_base: [shorts, ai, buildinpublic]
