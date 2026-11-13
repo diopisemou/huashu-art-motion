@@ -1,6 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Claude Code Esc: you do not have to wait while it goes the wrong way. Esc stops it mid-action and keeps everything up to that point; /rewind, or Esc twice on an empty prompt, opens the rewind menu (docs:
-  https://code.claude.com/docs/en/best-practices)'
 - 'Claude Code Stop hook: it says done while the typecheck still fails. A Stop hook runs your script whenever it tries to end its turn, and sends it back to work if the script exits with code 2 (docs: https://code.claude.com/docs/en/best-practices)'
 - 'Claude Code CLAUDE.md: a long CLAUDE.md makes it worse, not better, because every line takes attention on every task. /init writes a starting version; from there the work is mostly removing lines (docs:
   https://code.claude.com/docs/en/best-practices)'
