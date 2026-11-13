@@ -1227,5 +1227,14 @@
     },
     "url": "https://youtube.com/shorts/mc5ilgGXt2Q",
     "note": "built by the 06:07 Routine (fired 11:52Z Nov 13, second Short of the UTC day after the 00:06Z plan-mode rebuild); explainer t1_3b1b, cold open (equation under the title), facts from code.claude.com/docs/en/best-practices (Esc stops mid-action keeps work; /rewind or Esc Esc opens rewind menu; Bash-only changes not restored); lint clean, QA OK no warnings (0 frozen, 150 wpm, STT 0.97, -14.3 LUFS, 28.9 s); critic retold the topic exactly but voted HOLD on sparse first frame, mid-reveal bullet, end card caught mid-animation and 'no demo visual', all standard for t1/end card, every caption readable, no rebuild; known weakness: the last highlight box sits on the rewind point while narration says Bash-only (no on-screen text for that caveat), consider a 4th point next time; published public, verified; cross-post SKIPPED: Postiz API 401 'No subscription found' (needs Bachir); last four Shorts at 64/64/31/37 views."
+  },
+  {
+    "date": "2026-11-13T15:48:58+00:00",
+    "topic": "Claude Code Esc: you do not have to wait while it goes the wrong way. Esc stops it mid-action and keeps everything up to that point; /rewind, or Esc twice on an empty prompt, opens the rewind menu (docs: https://code.claude.com/docs/en/best-practices)",
+    "title": "Claude Code Esc: stop it mid-run, then /rewind",
+    "format": "explainer",
+    "grammar": "t1_3b1b",
+    "video_id": "VF1hA8FM5JY",
+    "url": "https://youtube.com/shorts/VF1hA8FM5JY"
   }
 ]
