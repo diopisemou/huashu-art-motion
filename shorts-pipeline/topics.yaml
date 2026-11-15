@@ -1,6 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Claude Code --worktree: two sessions in one folder edit the same files. `claude --worktree feature-auth` starts a session in its own checkout on its own branch, so parallel edits do not collide (docs:
-  https://code.claude.com/docs/en/common-workflows)'
 - 'Claude Code subagents: exploring a big codebase fills your main session with file reads. Say ''use a subagent to investigate how our auth system handles token refresh'': it reads in its own context and
   only the findings come back (docs: https://code.claude.com/docs/en/common-workflows)'
 - 'Claude Code skills: your release steps do not belong in CLAUDE.md. A skill saved at .claude/skills/<name>/SKILL.md is only read in full when the task calls for it, so it does not weigh on unrelated work
