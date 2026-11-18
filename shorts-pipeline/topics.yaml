@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'Claude Code read-only reviewer: a reviewer that can edit is not a reviewer. A subagent file in .claude/agents/ with `tools: Read, Grep, Glob` can read the code and cannot change it (docs: https://code.claude.com/docs/en/best-practices)'
 - 'Claude Code /compact: a bare /compact decides for you what to keep. Give it a focus: `/compact keep the API changes and the test commands` (docs: https://code.claude.com/docs/en/best-practices)'
 - 'Claude Code --continue: closing the terminal does not lose the task. `claude --continue` resumes the most recent session in that folder; `claude --resume` lets you choose from a list (docs: https://code.claude.com/docs/en/common-workflows)'
 - '''Refactor this'' with no target is a demolition order: name the one smell you want gone'
