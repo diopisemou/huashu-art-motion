@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'The agent''s ''done'' is a claim, not a result: ask for the command that proves it'
 - 'Pasting the whole log buries the line that matters: paste the first error, not the last'
 - '''Match the design'' fails without the design: paste the screenshot or the CSS, not the adjective'
 - 'Letting the agent pick the library is how you get three HTTP clients: name the dependency or say none'
