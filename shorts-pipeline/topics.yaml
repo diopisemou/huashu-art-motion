@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- '''Match the design'' fails without the design: paste the screenshot or the CSS, not the adjective'
 - 'Letting the agent pick the library is how you get three HTTP clients: name the dependency or say none'
 - 'Asking the agent to fix the failing test invites it to edit the test: say the test is the spec and the code is wrong'
 - 'Long chats drift from your first instruction: restate the rule in the prompt where it matters'
