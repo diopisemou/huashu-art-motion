@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- '''Make it faster'' sends the agent guessing: give it the slow command and the number you want'
 - 'Accepting every permission prompt is not a workflow: allow the safe commands once, review the rest'
 - 'An agent that cannot run your app will guess: give it the one command that starts it and the URL to check'
 - 'Pasting the whole repo into the prompt buries the bug: point at the file and the function'
