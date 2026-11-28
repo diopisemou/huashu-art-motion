@@ -1,5 +1,4 @@
 # Topic queue. `shorts run` pops the first entry; `shorts topics --fill` asks Claude for more.
-- 'An agent that cannot run your app will guess: give it the one command that starts it and the URL to check'
 - 'Pasting the whole repo into the prompt buries the bug: point at the file and the function'
 - 'Telling the agent to ''be careful'' does nothing: give it a checklist it can tick off'
 - 'Asking the agent to fix lint errors by disabling the rule is a trap: say the rule stays on'
